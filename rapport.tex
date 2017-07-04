@@ -1,0 +1,82 @@
+\documentclass[a4paper, 12pt]{report}
+\newcommand{\keywords}[1]{\par\textbf{Mot clefs:}\par\quad #1}
+\newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\newpage}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[nonumberlist]{glossaries}
+\usepackage[T1]{fontenc}
+\usepackage[british,francais]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{svg}
+\usepackage{parskip}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{sectsty}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+\usepackage{titling}
+\usepackage{lipsum}
+\usepackage{microtype}
+
+% Document info
+\title{Détection et classification d'objets dans un flux vidéo sphérique}
+\author{Alban Chazot}
+\date{\today}
+
+% Header + footer
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+% Pages setup
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+\setlength{\parindent}{15pt}
+
+% Glossary
+\input{glossary}
+
+
+% Contents
+\begin{document}
+	% Front page
+	\includepdf[pages={-},offset=30mm -25mm]{premade/frontpage.pdf}
+	\blankpage
+	
+	% Abstract
+	\input{abstract}
+
+	% Thanks
+	\input{thanks}
+
+	% TOC
+	\tableofcontents
+	\pagebreak
+	
+	% Chapters
+	\input{chap1}
+	\input{chap2}
+	
+	% Glossary
+	\setglossarystyle{altlist}
+	\printglossaries
+
+	% Bibliography
+	\input{bibliography}
+	
+	% DUMMY -> REMOVE
+	\gls{carvec}
+\end{document}

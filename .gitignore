@@ -1,0 +1,12 @@
+*.toc
+*.log
+*.out
+*.pdf
+*.glg
+*.glo
+*.gls
+*.ist
+!premade/*.pdf
+!figures/*.pdf
+*.aux
+*.swp
