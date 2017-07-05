@@ -1,7 +1,7 @@
 \documentclass[a4paper, 12pt]{report}
 \newcommand{\keywords}[1]{\par\textbf{Mot clefs:}\par\quad #1}
-\newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\newpage}
-
+\newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\setcounter{page}{0}\newpage}
+\newcommand{\nocounter}{\thispagestyle{empty}\setcounter{page}{0}\pagebreak}
 % Packages
 \usepackage[utf8]{inputenc}
 \usepackage[nonumberlist]{glossaries}
@@ -53,22 +53,29 @@
 % Contents
 \begin{document}
 	% Front page
+	\nocounter
 	\includepdf[pages={-},offset=30mm -25mm]{premade/frontpage.pdf}
+	\nocounter
 	\blankpage
+	\nocounter
 	
 	% Abstract
 	\input{abstract}
+	\nocounter
 
 	% Thanks
 	\input{thanks}
+	\nocounter
 
 	% TOC
-	\tableofcontents
-	\pagebreak
-	
+	{\linespread{.7}\tableofcontents}
+	\nocounter
+		
 	% Chapters
+	\setcounter{page}{1}
 	\input{chap1}
 	\input{chap2}
+	\input{chap3}
 	
 	% Glossary
 	\setglossarystyle{altlist}
@@ -77,6 +84,4 @@
 	% Bibliography
 	\input{bibliography}
 	
-	% DUMMY -> REMOVE
-	\gls{carvec}
 \end{document}

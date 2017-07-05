@@ -7,6 +7,5 @@
 *.gls
 *.ist
 !premade/*.pdf
-!figures/*.pdf
 *.aux
 *.swp
