@@ -3,14 +3,15 @@
 \newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\setcounter{page}{0}\newpage}
 \newcommand{\nocounter}{\thispagestyle{empty}\setcounter{page}{0}\pagebreak}
 % Packages
+\usepackage{tocloft}
 \usepackage[utf8]{inputenc}
-\usepackage[nonumberlist]{glossaries}
 \usepackage[T1]{fontenc}
 \usepackage[british,francais]{babel}
 \usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{hyperref}
+\usepackage[pdfpagelabels, urlbordercolor={.909803921569 .796078431373 .552941176471},linkbordercolor={.839215686275 .4862745098 .482352941176},citebordercolor={.839215686275 .607843137255 .447058823529}]{hyperref}
+\usepackage[nonumberlist]{glossaries}
 \usepackage{svg}
 \usepackage{parskip}
 \usepackage{url}
@@ -53,6 +54,7 @@
 % Contents
 \begin{document}
 	% Front page
+	\hypersetup{pageanchor=false}
 	\nocounter
 	\includepdf[pages={-},offset=30mm -25mm]{premade/frontpage.pdf}
 	\nocounter
@@ -68,11 +70,16 @@
 	\nocounter
 
 	% TOC
+	\setlength{\cftbeforetoctitleskip}{-3em}
 	{\linespread{.7}\tableofcontents}
 	\nocounter
+
+	% Introduction
+	\hypersetup{pageanchor=true}
+	\setcounter{page}{1}
+	\input{introduction}
 		
 	% Chapters
-	\setcounter{page}{1}
 	\input{chap1}
 	\input{chap2}
 	\input{chap3}
