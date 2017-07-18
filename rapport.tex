@@ -2,7 +2,10 @@
 \newcommand{\keywords}[1]{\par\textbf{Mot clefs:}\par\quad #1}
 \newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\setcounter{page}{0}\newpage}
 \newcommand{\nocounter}{\thispagestyle{empty}\setcounter{page}{0}\pagebreak}
+
 % Packages
+\usepackage{xargs}
+\usepackage[pdftex,dvipsnames]{xcolor}
 \usepackage{tocloft}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -20,11 +23,20 @@
 \usepackage{vmargin}
 \usepackage{sectsty}
 \usepackage{listings}
-\usepackage{xcolor}
 \usepackage{pdfpages}
 \usepackage{titling}
 \usepackage{lipsum}
 \usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{eurosym}
+
+%TODO notes
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\content}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 
 % Document info
 \title{Détection et classification d'objets dans un flux vidéo sphérique}
@@ -53,6 +65,7 @@
 
 % Contents
 \begin{document}
+{
 	% Front page
 	\hypersetup{pageanchor=false}
 	\nocounter
@@ -70,8 +83,8 @@
 	\nocounter
 
 	% TOC
-	\setlength{\cftbeforetoctitleskip}{-3em}
-	{\linespread{.7}\tableofcontents}
+	\setlength{\cftbeforetoctitleskip}{-7.9em}
+	{\linespread{.5}\tableofcontents}
 	\nocounter
 
 	% Introduction
@@ -83,12 +96,17 @@
 	\input{chap1}
 	\input{chap2}
 	\input{chap3}
+	\input{chap4}
 	
 	% Glossary
 	\setglossarystyle{altlist}
-	\printglossaries
+	\printglossary[title={Glossaire}, toctitle={Glossaire}]
 
 	% Bibliography
 	\input{bibliography}
 	
+	% Appendix
+	\newpage
+	\input{appendix}
+}
 \end{document}

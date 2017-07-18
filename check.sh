@@ -8,5 +8,6 @@ if [ -n "$errors" ]; then
 	filen=$(echo $errors | sed 's/:.*//')
 	estr=$(cat -n $filen | grep "^ *$linen")
 	echo -e "\033[0;31mhere: $estr \033[0m"
+	echo ""
 	exit 1
 fi
