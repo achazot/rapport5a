@@ -9,3 +9,5 @@
 !premade/*.pdf
 *.aux
 *.swp
+*.xdy
+*.lof

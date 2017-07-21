@@ -15,6 +15,11 @@ tex:
 	@makeglossaries $(DOC) >/dev/null 2>&1
 	@echo "\033[0;32m***\033[0m Final pass\033[0m"
 	@pdflatex $(LFLAGS) $(DOC).tex >/dev/null 2>&1 || $(ERRCMD)
+	@echo "\033[0;32m***\033[0m Compressing (4 pass)\033[0m"
+	@./optimize.sh $(DOC).pdf >/dev/null 2>&1
+	@./optimize.sh $(DOC).pdf >/dev/null 2>&1
+	@./optimize.sh $(DOC).pdf >/dev/null 2>&1
+	@./optimize.sh $(DOC).pdf >/dev/null 2>&1
 	@echo "\033[0;32m*** Done\033[0m"
 
 figures: genmsg $(OBJ)

@@ -5,23 +5,58 @@
 		\subsection{Le concept du système}
 			
 			% Idée globale du système
-			Le projet vise à crée un démonstrateur d'un concept plus large, à savoir un système permettant de piloter ensemble de robots et d'exploiter les informations issus de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains susceptibles d'être dangereux. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot, équipé d'un \gls{lidar} et d'une caméra sphérique.
+			Le projet vise à crée un démonstrateur d'un concept plus large, à savoir un système permettant de piloter ensemble de robots et d'exploiter les informations issus de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains susceptibles d'être dangereux. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot, équipé d'un \gls{lidar} et d'une caméra sphérique, permettant de contrôler ses déplacements, d'analyser les données acquises par ces deux périphériques, et d'afficher les résultats de ces traitements dans une interface utilisateur.
 			\par
 			% Mon sujet de stage
+			Devant l'ampleur du travail à accomplir, le projet a été scindé en deux sujets de stage, chacun correspondant au traitement des données acquise par un des deux périphériques. Le sujet dont il est question dans ce document est relatif à l'exploitation de la caméra sphérique. On dégage trois objectifs principaux à la mission décrite dans le sujet du stage:
+			\begin{itemize}[noitemsep]
+				\item Réalisation d'un état de l'art permettant de choisir le matériel et l'algorithme à utiliser.
+				\item Développement d'une brique logicielle permettant d'effectuer de la reconnaissance d'objets en temps réel.
+				\item Développement d'une brique logicielle permettant d'afficher les résultats de la détection incrustés à la vidéo.
+			\end{itemize}
+			
+			\improvement[inline]{Ajouter plus de détails ici, comme un autre §}
 
 		\subsection{Exigences}
 
-			\lipsum[21-22]
+			\content[inline]{A faire}
 
 	\section{Etat de l'art}
 
-		\subsection{Réseaux neuronaux et apprentissage profond}
+		\subsection{Détection d'objets et apprentissage automatique}
 			
-			\lipsum[23-24]
+			La détection d'objets d'intérêt est une discipline de la vision par ordinateur qui consiste à détecter la présence d'un type d'objet (appelé communément \emph{classe}) dans une image. On peut distinguer plusieurs problématiques issues du sujet:
+			\begin{description}[noitemsep]
+				\item[Localisation:] Trouver les coordonnées exactes d'un objet dans une image.
+				\item[Classification:] Associer une image contenant un objet à un élément d'un ensemble de classes prédéfinies.
+				\item[Reconnaissance:] Identifier une instance précise d'une classe (distinguer deux éléments distincts de même classe).
+			\end{description}
+			Pour répondre à ces problématiques, on utilise généralement un \emph{système de reconnaissance de forme}, procédé permettant de décrire une image ou partie d'une image au travers d'une représentation mathématique et de la comparer à des modèles de représentations connus afin de l'assimiler à une classe définie. Un des exemples les plus connus est la \emph{Méthode de Viola et Jones}\cite{viola}, principalement utilisée pour la détection de visages. Ces systèmes comprennent deux éléments principaux:
+			\begin{itemize}[noitemsep]
+				\item Un extracteur des caractéristiques de l'entrée
+				\item Un classifieur qui associe l'entrée à une classe
+			\end{itemize}
+			L'extracteur de caractéristiques est un algorithme qui permet de traduire une image, ou partie d'une image, en une représentation mathématique de caractéristiques visuelles qu'elle contient (coins, traits, points, dégradés \dots). L'approche classique consiste à considérer l'entrée comme une matrice et d'y appliquer une fonction mathématique fixe.
+			Le classifieur, souvent basé sur des \emph{Machines à Vecteur de Support}\cite{svm}, permet de discriminer des groupes au sein des résultats, et donc de déterminer l'appartenance d'un résultat à une classe.
+			\par
+			Généralement, un algorithme classifieur est entraînable, c'est à dire qu'en lui fournissant deux ensembles connus de vecteurs, il déterminera lui même la loi permettant de les séparer, ce qu'on appelle l'apprentissage supervisé. A l'inverse, l'algorithme extracteur de charactéristiques, toujours dans une approche \og classique \fg{} fournira toujours un même résultat pour une entrée donnée (citons les algorithmes \emph{SIFT}\cite{sift}, \emph{HOG}\cite{hog} et \emph{SURF}\cite{surf}).
+			
+			\improvement[inline]{ajouter schéma et plus détails}
 
-		\subsection{RPN et CNN}
+		\subsection{Apprentissage profond et R-CNN}
 
-			\lipsum[23-24]
+			L'apprentissage profond est basé sur l'utilisation de réseaux neuronaux artificiels multicouche. Ces réseaux sont schématiquement inspirés des réseaux neuronaux biologiques tels que nous les connaissons en ceci qu'ils se basent sur la transmission de données entre de nombreux modules, appelés \emph{Neurones Formels}, illustré en \autoref{fig:aneuron}.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[page=1,width=.6\textwidth]{figures/aneuron.pdf}
+				\caption{Schéma d'un neurone formel}
+				\label{fig:aneuron}
+			}
+			\end{figure}
+			
+			
+			\improvement[inline]{WIP}
 
 		\subsection{Vidéo sphérique}
 			% de 1 à 36 objectifs
@@ -32,7 +67,7 @@
 			Cette médiatisation importante de la réalité virtuelle a entraîné la conception de caméras à 360\degre par de nombreux fabricants grand-public (LG, Samsung, Kodak), par opposition aux fabricants de matériel vidéo professionnel, comme FLIR (avec sa série des \emph{Ladybug} \cite{ladybug}). La recherche de matériel à acquérir s'est donc concrétisée par la création d'un comparatif des différentes caméras à 360\degre présent dans l'annexe X.
 			
 			Le choix d'acquisition du matériel à été piloté principalement par les facteurs suivants:
-			\begin{itemize}[noitemsep,label=\textbullet]
+			\begin{itemize}[noitemsep]
 				\item Couverture spatiale complète ($360^{\circ}\times180^{\circ}$)
 				\item Au moins 15 images/secondes
 				\item Transmission de la vidéo par WiFi ou USB

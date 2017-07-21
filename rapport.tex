@@ -13,7 +13,19 @@
 \usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage[pdfpagelabels, urlbordercolor={.909803921569 .796078431373 .552941176471},linkbordercolor={.839215686275 .4862745098 .482352941176},citebordercolor={.839215686275 .607843137255 .447058823529}]{hyperref}
+\usepackage[pdfpagelabels,%
+            urlbordercolor={.909803921569 .796078431373 .552941176471},%
+            linkbordercolor={.839215686275 .4862745098 .482352941176},%
+            citebordercolor={.839215686275 .607843137255 .447058823529},%
+            pdftex,%
+            pdfauthor={Alban Chazot},%
+            pdftitle={Détection et classification d'objets dans un flux vidéo sphérique},%
+            pdfsubject={Rapport de stage de 5A STI},%
+            pdfkeywords={réseaux neuronaux, apprentissage profond, traitement de l'image, reconnaissance d'objets, temps réel},%
+            pdfproducer={pdfTeX 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian)},%
+            pdfcreator={Atom 1.14.3},%
+            ]{hyperref}
+\usepackage{cleveref}
 \usepackage[nonumberlist]{glossaries}
 \usepackage{svg}
 \usepackage{parskip}
@@ -36,7 +48,6 @@
 \newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 
 % Document info
 \title{Détection et classification d'objets dans un flux vidéo sphérique}
@@ -58,6 +69,7 @@
 \cfoot{\thepage}
 \setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 \setlength{\parindent}{15pt}
+%\linespread{1.05}
 
 % Glossary
 \input{glossary}
@@ -84,7 +96,7 @@
 
 	% TOC
 	\setlength{\cftbeforetoctitleskip}{-7.9em}
-	{\linespread{.5}\tableofcontents}
+	\tableofcontents
 	\nocounter
 
 	% Introduction
@@ -101,7 +113,8 @@
 	% Glossary
 	\setglossarystyle{altlist}
 	\printglossary[title={Glossaire}, toctitle={Glossaire}]
-
+	\listoffigures
+	
 	% Bibliography
 	\input{bibliography}
 	
