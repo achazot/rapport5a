@@ -1,0 +1,67 @@
+\begin{center}
+	\begin{tabularx}{\textwidth}[t]{rsb}
+
+		\arrayrulecolor{green}\hline
+		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC001-ACQUISITION\_VIDEO}}}\\
+		\hline
+
+		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
+		\arrayrulecolor{black}\hline
+		
+		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
+		\arrayrulecolor{gray}\hline
+
+		\arrayrulecolor{green}\hline
+		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC002-DETECTION}}}\\
+		\hline
+
+	\end{tabularx}
+
+	\begin{tabularx}{\textwidth}[t]{rsb}
+
+		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
+		\arrayrulecolor{black}\hline
+		
+		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
+		\arrayrulecolor{gray}\hline
+		
+	\end{tabularx}
+
+	\begin{tabularx}{\textwidth}[t]{rsb}
+
+		\arrayrulecolor{green}\hline
+		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC003-RETOUR\_VISUEL}}}\\
+		\hline
+
+		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
+		\arrayrulecolor{black}\hline
+		
+		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
+		\arrayrulecolor{gray}\hline
+		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
+		\arrayrulecolor{gray}\hline
+
+	\end{tabularx}
+\end{center}

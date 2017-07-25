@@ -5,7 +5,7 @@
 
 % Packages
 \usepackage{xargs}
-\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage[pdftex,dvipsnames,table]{xcolor}
 \usepackage{tocloft}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -39,16 +39,22 @@
 \usepackage{titling}
 \usepackage{lipsum}
 \usepackage{microtype}
+\usepackage{tabularx}
 \usepackage{enumitem}
 \usepackage{eurosym}
 \usepackage[super]{natbib}
-
-%TODO notes
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+% Macros
 \newcommandx{\content}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 \newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcounter{descriptcount}
+\renewcommand{\arraystretch}{1.5}
+\newcolumntype{b}{X}
+\newcolumntype{s}{>{\hsize=.5\hsize}X}
+\newcolumntype{r}{>{\hsize=.3\hsize}X}
 
 % Document info
 \title{Détection et classification d'objets dans un flux vidéo sphérique}
@@ -71,6 +77,9 @@
 \setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 \setlength{\parindent}{15pt}
 \setcitestyle{super,open={},close={}}
+\setlist{nolistsep}
+\definecolor{green}{HTML}{7AAEDD}
+\definecolor{myGreen}{HTML}{0061AA}
 %\linespread{1.05}
 
 % Glossary

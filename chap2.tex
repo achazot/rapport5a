@@ -15,7 +15,7 @@
 				\item Développement d'une brique logicielle permettant d'afficher les résultats de la détection incrustés à la vidéo.
 			\end{itemize}
 			\par
-			Préalablement à la conception architecturale du projet, un document de \improvement{ajouter ref annexe + corriger STBL}\emph{Spécification Technique du Besoin Logiciel (STBL)} a été réalisé afin de fixer détailler ces trois objectifs et de référencer les exigences de qualité. A cette occasion, des éléments d'analyse fonctionnelle ont été effectués afin de mieux cerner le besoin, tels qu'un diagramme de cas d'utilisation (\autoref{fig:usecase}),
+			Préalablement à la conception architecturale du projet, un document de \improvement{ajouter ref annexe + corriger STBL}\emph{Spécification Technique du Besoin Logiciel (STBL)} a été réalisé afin de fixer détailler ces trois objectifs et de référencer les exigences de qualité. A cette occasion, des éléments d'analyse fonctionnelle ont été effectués afin de mieux cerner le besoin, tels qu'un diagramme de cas d'utilisation (\autoref{fig:usecase}), qui permet de préciser le besoin d'un point de vue utilisateur et aide à définir les exigences fonctionnelles.
 			
 			\begin{figure}[h]
 			{
@@ -31,7 +31,21 @@
 
 		\subsection{Exigences}
 
-			\content[inline]{A faire}
+			Le document de Spécification Technique du Besoin Logiciel développe le fonctionnement de la brique logicielle en trois fonctions principales détaillées dans la liste suivante, accompagnées de leurs descriptions:
+			\begin{description}[noitemsep, before={\setcounter{descriptcount}{0}},font=\bfseries\stepcounter{descriptcount}\thedescriptcount.~]
+				\item[Acquisition Vidéo:] Acquérir un flux vidéo provenant d’une caméra \oldstylenums{360}\degre.
+				\item[Détection:] Détecter et classifier les objets d’intérêt présents dans le flux vidéo.
+				\item[Retour visuel:] Offrir un retour visuel à l’opérateur présentant le flux vidéo et les objets détectés.
+			\end{description}
+			Ce document précise ces fonctions en y faisant correspondre des facteurs de qualité, appelés \emph{exigences fonctionnelles} qui permettent de piloter la réalisation du produit présentant ces fonctionnalités. Elles sont recensées dans le tableau suivant avec leurt référence, leur intitulé et une courte description.
+			
+			\input{reqs1}
+			
+			La spécification technique décrit aussi d'autres contraintes de réalisation et de qualité, plus décorrélées de l'expression du besoin, qui auront un impact sur les décisions de conception et d'architecture du produit final. Ces contraintes sont énumérées dans le tableau suivant.
+			
+			
+			
+			\info[inline]{WIP}
 
 	\section{Etat de l'art}
 
@@ -75,8 +89,9 @@
 			La photographie sphérique, aussi connue sous le nom de photographie à 360\degre ou \emph{VR photography} (pour réalité virtuelle), s'apparente à la photographie panoramique, en ceci qu'elle vise à capturer un point de vue sous la forme d'une image avec un champ de vision exceptionnellement large (ratio supérieur à $1:2$)\cite{fnumpano}. En effet, le but est de représenter une scène complète dans une seule image, comme on pourrait l'observer en effectuant un tour complet autour d'un point fixe. Le concept s'est fortement démocratisé au travers de son apparition dans \emph{Google StreetView}, et plus récemment par l'importante médiatisation de la réalité virtuelle, permettant une plus grande immersion lors du visionnage de photographie ou de vidéos sphériques.
 			\par
 			L'obtention d'une image prête au visionnage n'est théoriquement pas possible avec une seule prise de vue. Les techniques utilisées pour obtenir de telles images reposent toutes sur l'assemblage de plusieurs photographies, ce qui peut faire apparaître des incohérences dans la scène lorsqu'elles sont prises à des temps différents (les sujets qui se déplacent peuvent être présents sur plusieurs photographies, donc plusieurs parties de la scène). Pour obtenir le plus de cohérence dans le flux vidéo et minimiser le traitement dû à l'assemblage, il a donc été décidé d'acquérir un appareil qui permet de capturer instantanément une scène complète avec plusieurs objectifs.
+			\improvement[inline]{Ajouter images ou schémas}
 			\par
-			Cette médiatisation importante de la réalité virtuelle a entraîné la conception de caméras à \oldstylenums{360}\degre par de nombreux fabricants grand-public (LG, Samsung, Kodak), par opposition aux fabricants de matériel vidéo professionnel, comme FLIR (avec sa série des \emph{Ladybug} \cite{ladybug}). La recherche de matériel à acquérir s'est donc concrétisée par la création d'un comparatif des différentes caméras à \oldstylenums{360}\degre présent dans l'annexe X.
+			Cette médiatisation importante de la réalité virtuelle a entraîné la conception de caméras à \oldstylenums{360}\degre par de nombreux fabricants grand-public (LG, Samsung, Kodak), par opposition aux fabricants de matériel vidéo professionnel, comme FLIR (avec sa série des \emph{Ladybug} \cite{ladybug}). La recherche de matériel à acquérir s'est donc concrétisée par la création d'un comparatif des différentes caméras à \oldstylenums{360}\degre présent dans l'annexe =REF!!!=.
 			
 			Le choix d'acquisition du matériel à été piloté principalement par les facteurs suivants:
 			\begin{itemize}[noitemsep]
