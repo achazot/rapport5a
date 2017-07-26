@@ -1,67 +1,68 @@
 \begin{center}
+	\scriptsize
 	\begin{tabularx}{\textwidth}[t]{rsb}
-
-		\arrayrulecolor{green}\hline
-		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC001-ACQUISITION\_VIDEO}}}\\
-		\hline
+		\arrayrulecolor{siisky}\cmidrule(l){1-3}
+		\multicolumn{3}{c}{\textbf{\textcolor{siiblue}{FNC001-ACQUISITION\_VIDEO}}}\\
+		\cmidrule(l){1-3}
 
 		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
-		\arrayrulecolor{black}\hline
+		\arrayrulecolor{black}\cmidrule(l){1-3}
 		
 		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
-		\arrayrulecolor{gray}\hline
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
-		\arrayrulecolor{gray}\hline
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
-		\arrayrulecolor{gray}\hline
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
-		\arrayrulecolor{gray}\hline
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
-		\arrayrulecolor{gray}\hline
-
-		\arrayrulecolor{green}\hline
-		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC002-DETECTION}}}\\
-		\hline
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 
 	\end{tabularx}
 
 	\begin{tabularx}{\textwidth}[t]{rsb}
 
+		\arrayrulecolor{siisky}\cmidrule(l){1-3}
+		\multicolumn{3}{c}{\textbf{\textcolor{siiblue}{FNC002-DETECTION}}}\\
+		\cmidrule(l){1-3}
 		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
-		\arrayrulecolor{black}\hline
+		\arrayrulecolor{black}\cmidrule(l){1-3}
 		
-		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
-		\arrayrulecolor{gray}\hline
+		FNC002\_01 & Extraire les positions des objets & En présence d’une image au format RGB8, le logiciel doit détecter la présence des objets définis par la configuration utilisée et en extraire leurs positions (x,y) relatives à l’espace en deux dimensions de l’image. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC002\_02 & Extraire une description sémantique de chaque objet & En présence d’une image au format RGB8, le logiciel doit détecter la présence des objets définis par la configuration utilisée et en extraire une description sémantique telle que spécifiée lors de la configuration. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC002\_03 & Transmettre les informations extraites & A chaque fin de traitement d’une image, le logiciel doit mettre à disposition les informations calculées au travers d’une liste d’information relatives à un objet, accompagnée d’un horodatage relatif à l’image traitée. L’information relative à un objet doit comporter : Sa position relative à l’espace de l’image, Une description sémantique telle que spécifiée dans la configuration, Un facteur absolu de confiance dans la précision des informations. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC002\_04 & Relayer l’état du système de détection & Les informations suivantes doivent être mises à disposition de la fonction retour visuel : Système de détection disponible, Système de détection actif, Erreur de traitement. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 		
 	\end{tabularx}
 
 	\begin{tabularx}{\textwidth}[t]{rsb}
 
-		\arrayrulecolor{green}\hline
-		\multicolumn{3}{c}{\textbf{\textcolor{myGreen}{FNC003-RETOUR\_VISUEL}}}\\
-		\hline
+		\arrayrulecolor{siisky}\cmidrule(l){1-3}
+		\multicolumn{3}{c}{\textbf{\textcolor{siiblue}{FNC003-RETOUR\_VISUEL}}}\\
+		\cmidrule(l){1-3}
 
 		\textbf{Référence} & \textbf{Intitulé} & \textbf{Description} \\
-		\arrayrulecolor{black}\hline
+		\arrayrulecolor{black}\cmidrule(l){1-3}
 		
-		FNC001\_01 & Décoder le flux vidéo & Le flux doit être décomposé en images séparées au format RGB8 \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_02 & Transmettre séquentiellement les images obtenues du décodage & Les images décodées doivent être mises à disposition des fonctions dépendantes (détection et retour visuel) dans l’ordre d’obtention et sans latence supérieure à la vitesse d’acquisition. \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_03 & Transmettre un horodatage relatif à une image décodée & Chaque image mise à disposition doit être accompagnée d’un horodatage permettant de la situer dans le temps de manière cohérente. \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_04 & Relayer l’état du matériel et de la connexion & Les informations suivantes doivent être mises à disposition de la fonction retour visuel: Caméra connectée, flux vidéo disponible, erreur de décodage \\
-		\arrayrulecolor{gray}\hline
-		FNC001\_05 & Traiter les éventuelles erreurs de décodage & Les erreurs temporaires ne doivent pas affecter le fonctionnement du logiciel. En cas d’erreur, la relayer au retour visuel. \\
-		\arrayrulecolor{gray}\hline
+		FNC003\_01 & Afficher un flux vidéo 360\degre sans déformations & L’image issue d’une caméra 360\degre correspond à une projection sur un espace à deux dimensions d’un espace sphérique. Le système doit donc transformer les images du flux de manière à obtenir une représentation proche de la réalité. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_02 & Incruster les données issues du système de détection & Le système doit faire apparaitre les résultats du système de détection sur la représentation transformée du flux vidéo, c’est-à-dire : Dessiner un contour grossier toujours visible de l’objet, Retranscrire la description sémantique, Faire apparaître le coefficient de confiance. L’incrustation doit être réalisée de manière à attirer l’attention sans pour autant occulter une partie trop importante de l’image. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_03 & Assurer la cohérence entre les images et les annotations & Le système doit vérifier un décalage minime entre l’horodatage de l’annotation générée par le système de détection et celui de l’image visionnée. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_04 & Permettre à l’opérateur de naviguer dans une image 360\degre & Le système doit gérer les entrées utilisateur afin de lui permettre de tourner la caméra avec la souris de manière à pouvoir visionner l’ensemble d’une image. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_05 & Signaler les détections en dehors du champ de vision de l’opérateur & Les annotations qui ne seraient pas directement visibles dans le champ de vision de l’opérateur fourni par l’interface doivent être signalées graphiquement de manière à pouvoir les retrouver en tournant la caméra. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_06 & Offrir les informations d’état du système à l’opérateur & L’interface doit comporter des indicateurs visibles des différents états du système. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
+		FNC003\_07 & Permettre à l’opérateur de choisir une configuration & Plusieurs configurations pouvant être amenées à être générées, l’interface doit permettre à l’opérateur de choisir la configuration adéquate avec sa mission. \\
+		\arrayrulecolor{gray}\cmidrule(l){1-3}
 
 	\end{tabularx}
 \end{center}

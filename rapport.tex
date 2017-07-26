@@ -44,6 +44,8 @@
 \usepackage{eurosym}
 \usepackage[super]{natbib}
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage{booktabs} %for rules
+\usepackage{multirow}
 
 % Macros
 \newcommandx{\content}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
@@ -54,7 +56,7 @@
 \renewcommand{\arraystretch}{1.5}
 \newcolumntype{b}{X}
 \newcolumntype{s}{>{\hsize=.5\hsize}X}
-\newcolumntype{r}{>{\hsize=.3\hsize}X}
+\newcolumntype{r}{>{\hsize=.2\hsize}X}
 
 % Document info
 \title{Détection et classification d'objets dans un flux vidéo sphérique}
@@ -78,8 +80,19 @@
 \setlength{\parindent}{15pt}
 \setcitestyle{super,open={},close={}}
 \setlist{nolistsep}
-\definecolor{green}{HTML}{7AAEDD}
-\definecolor{myGreen}{HTML}{0061AA}
+\definecolor{siisky}{HTML}{7AAEDD}
+\definecolor{siiblue}{HTML}{0061AA}
+\definecolor{siiorange}{HTML}{D64911}
+\definecolor{siiorange2}{HTML}{FA6900}
+\definecolor{siigrey}{HTML}{333D41}
+\definecolor{siigrey2}{HTML}{667074}
+\definecolor{siigreen}{HTML}{334100}
+\definecolor{siigreen2}{HTML}{667400}
+\definecolor{siipurple}{HTML}{8D338A}
+\definecolor{siipurple2}{HTML}{C066BD}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\setlength{\extrarowheight}{.0ex}
 %\linespread{1.05}
 
 % Glossary

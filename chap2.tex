@@ -5,7 +5,7 @@
 		\subsection{Le concept du système}
 			
 			% Idée globale du système
-			Le projet vise à créer un démonstrateur d'un concept plus large, à savoir un système permettant de piloter un ensemble de robots et d'exploiter les informations issues de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains susceptibles d'être dangereux. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot, équipé d'un \gls{lidar} et d'une caméra sphérique, permettant de contrôler ses déplacements, d'analyser les données acquises par ces deux périphériques, et d'afficher les résultats de ces traitements dans une interface utilisateur.
+			Le projet vise à créer un démonstrateur d'un concept plus large, à savoir un système permettant de piloter un ensemble de robots et d'exploiter les informations issues de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains susceptibles d'être dangereux. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot équipé d'un \gls{lidar} et d'une caméra sphérique, permettant de contrôler ses déplacements, d'analyser les données acquises par ces deux périphériques, et d'afficher les résultats de ces traitements dans une interface utilisateur.
 			\par
 			% Mon sujet de stage
 			Devant l'ampleur du travail à accomplir, le projet a été scindé en deux sujets de stage, chacun correspondant au traitement des données acquise par un des deux périphériques. Le sujet dont il est question dans ce document est relatif à l'exploitation de la caméra sphérique. On dégage trois objectifs principaux à la mission décrite dans le sujet du stage:
@@ -26,7 +26,7 @@
 			}
 			\end{figure}
 
-			\info[inline]{WIP}
+			\improvement[inline]{Ajouter du contenu ?}
 
 
 		\subsection{Exigences}
@@ -37,15 +37,16 @@
 				\item[Détection:] Détecter et classifier les objets d’intérêt présents dans le flux vidéo.
 				\item[Retour visuel:] Offrir un retour visuel à l’opérateur présentant le flux vidéo et les objets détectés.
 			\end{description}
-			Ce document précise ces fonctions en y faisant correspondre des facteurs de qualité, appelés \emph{exigences fonctionnelles} qui permettent de piloter la réalisation du produit présentant ces fonctionnalités. Elles sont recensées dans le tableau suivant avec leurt référence, leur intitulé et une courte description.
+			Ce document précise ces fonctions en y faisant correspondre des facteurs de qualité, appelés \emph{exigences fonctionnelles} qui permettent de piloter la réalisation du produit présentant ces fonctionnalités. Elles sont recensées dans les tableaux suivants avec leur référence, leur intitulé et une courte description:
 			
 			\input{reqs1}
+			\bigskip
+
+			La spécification technique décrit aussi d'autres contraintes de réalisation et de qualité, plus décorrélées de l'expression du besoin, qui auront un impact sur les décisions de conception et d'architecture du produit final. Pilotant l'ensemble de la réalisation, elles ne disposent pas de fonctions précises qui leur répondent, et de ce fait n'ont pas de référence. Ces contraintes sont énumérées dans les tableaux suivants:
 			
-			La spécification technique décrit aussi d'autres contraintes de réalisation et de qualité, plus décorrélées de l'expression du besoin, qui auront un impact sur les décisions de conception et d'architecture du produit final. Ces contraintes sont énumérées dans le tableau suivant.
+			\input{reqs2}
 			
-			
-			
-			\info[inline]{WIP}
+			\improvement[inline]{Ajouter du contenu ?}
 
 	\section{Etat de l'art}
 
@@ -71,7 +72,7 @@
 
 		\subsection{Apprentissage profond et R-CNN}
 
-			L'apprentissage profond est basé sur l'utilisation de réseaux neuronaux artificiels multicouche. Ces réseaux sont schématiquement inspirés des réseaux neuronaux biologiques tels que nous les connaissons en ceci qu'ils se basent sur la transmission de données entre de nombreux modules, appelés \emph{Neurones Formels}, illustré en \autoref{fig:aneuron}.
+			L'apprentissage profond est basé sur l'utilisation de réseaux neuronaux artificiels multicouche. Ces réseaux sont schématiquement inspirés des réseaux neuronaux biologiques tels que nous les connaissons en ceci qu'ils se basent sur la transmission de données entre de nombreux modules, appelés \emph{Neurones Formels}, illustré en \autoref{fig:aneuron}. Ces modules prennent en entrée $x_{i}$ des valeurs issues des résultats de neurones précédents ou bien de l'entrée d'origine du système. Ces entrées sont ensuite sommées avec leur \emph{poid synaptique} $\theta_{i}$ respectif, ainsi qu’un coefficient $\theta_{0}$ appelé biais. Ce résultat pondéré est ensuite transmis à une fonction d’activation non linéaire. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné.
 			\begin{figure}[h]
 			{
 				\centering

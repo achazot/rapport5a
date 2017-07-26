@@ -1,0 +1,57 @@
+\begin{center}
+	\scriptsize
+	\begin{tabularx}{\textwidth}[t]{rsb}
+		\arrayrulecolor{siiorange2}\cmidrule(l){1-3}
+		\multicolumn{3}{c}{\textbf{\textcolor{siiorange}{Contraintes d'environnement}}}\\
+		\arrayrulecolor{siiorange2}\cmidrule(l){1-3}
+
+		\textbf{Type} & \textbf{Élément} & \textbf{Composants} \\
+		\arrayrulecolor{black}\cmidrule(l){1-3}
+		
+		\multirow{4}{*}{Matériel} & \multirow{2}{*}{Plateforme mobile} & Raspberri Pi 3b \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & périphérique d’acquisition de flux vidéo \\ \arrayrulecolor{gray}\cmidrule(l){2-3}
+		                          & \multirow{2}{*}{Poste de contrôle} & Périphériques d'interface \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & Processeur graphique \\ \arrayrulecolor{gray}\cmidrule(l){1-3}
+		\multirow{7}{*}{Logiciel} & \multirow{3}{*}{Plateforme mobile} & Noyau linux (ARM) \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & Outils GNU \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & Framework ROS \\ \arrayrulecolor{gray}\cmidrule(l){2-3}
+		                          & \multirow{4}{*}{Poste de contrôle} & Noyau Linux (x86-64) \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & Outils GNU \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & Framework ROS \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+		                          &                                    & CUDA \\ \arrayrulecolor{gray}\cmidrule(l){1-3}
+	\end{tabularx}
+	
+	\begin{tabularx}{\textwidth}[t]{rsb}
+		\arrayrulecolor{siigreen2}\cmidrule(l){1-3}
+		\multicolumn{3}{c}{\textbf{\textcolor{siigreen}{Contraintes d'interface}}}\\
+		\arrayrulecolor{siigreen2}\cmidrule(l){1-3}
+
+		\textbf{Type} & \textbf{Élément} & \textbf{Détails} \\
+		\arrayrulecolor{black}\cmidrule(l){1-3}
+		
+		\multirow{4}{*}{Matériel} & \multirow{4}{*}{Périphérique d'acquisition vidéo} & Connection \gls{usb} 3.0\\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Format vidéo \gls{mjpeg} \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Protocole \gls{uvc} \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Format d'image "Dual Fisheye" \\ \arrayrulecolor{gray}\cmidrule(l){1-3}
+		\multirow{6}{*}{Logiciel} & \multirow{6}{*}{Système Robotique}                & Interface avec \gls{ros} \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Execution simultanée (les traitements ne doivent pas bloquer le reste du système) \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Latence minime dans le transfert d'images (<200ms) \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Transfert des détections synchronisé avec les images \\ \arrayrulecolor{gray}\cmidrule(l){3-3}
+								  &                                                   & Transfert des données selon un protocole à définir \\ \arrayrulecolor{gray}\cmidrule(l){1-3}
+	\end{tabularx}
+
+	\begin{tabularx}{\textwidth}[t]{sb}
+		\arrayrulecolor{siipurple2}\cmidrule(l){1-2}
+		\multicolumn{2}{c}{\textbf{\textcolor{siipurple}{Contraintes de programmation}}}\\
+		\arrayrulecolor{siipurple2}\cmidrule(l){1-2}
+
+		\textbf{Élément} & \textbf{Valeur} \\
+		\arrayrulecolor{black}\cmidrule(l){1-2}
+		
+		\multirow{1}{*}{Langages}   & C++ \\ \arrayrulecolor{gray}\cmidrule(l){1-2}
+		\multirow{3}{*}{Frameworks} & \gls{cuda} \\ \arrayrulecolor{gray}\cmidrule(l){2-2}
+								    & Qt5 \\ \arrayrulecolor{gray}\cmidrule(l){2-2}
+									& \gls{ros} \\ \arrayrulecolor{gray}\cmidrule(l){1-2}
+	\end{tabularx}
+	
+\end{center}
