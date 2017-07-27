@@ -33,7 +33,16 @@
 	
 		\subsection{Transmission de la vidéo}
 		
-			\content[inline]{A faire}
+			%1 jpeg 1280x768 = 400ko
+			%15 fps = 6000ko/s
+			%wifi = 54mb/s
+			%     = 6.75 mo/s
+			%benchmarks: 17.6 mb/s
+			La caméra Ricoh Theta S comporte une carte WiFi, ce qui permet, pour une utilisation \og normale \fg{} (avec l'application Android fournisseur) de s'y connecter avec un téléphone fonctionnant sous Android, afin d'y transférer les données de la caméra. Ces données peuvent prendre la forme de photos ou de vidéos, préalablement enregistrées sur la mémoire interne de la caméra et donc récupérées en différé, ou d'un mode spécial, nommé \emph{live}, qui permet de transmettre un flux vidéo continu correspondant à la capture des objectifs de la caméra en temps réel. Ce mode permet de transmettre un aperçu au téléphone avant de prendre une photo, uniquement supporté par l'application Android du fabricant. Devant la demande croissante du public d'utiliser ce mode de \og livestream \fg{}, les développeurs ont choisi de le rendre disponible sur pc, au travers d'un pilote matériel permettant aux OS \emph{Windows} et \emph{Mac OS} de considérer la caméra, alors branchée à l'ordinateur par \gls{usb}, comme une webcam, permettant ainsi la plupart des programmes d'exploiter ce flux vidéo. Ce pilote se charge de communiquer avec le bon protocole les commandes utilisateurs à la caméra et de transformer le flux vidéo dans un format exploitable. Après analyse du pilote windows, il a été découvert (car non exprimé dans la documentation du produit) qu'il utilise la bibliothèque \emph{libUVC}, et donc que la communication avec la caméra est effectuée au travers du protocole \gls{uvc}. La caméra étant sur la plateforme mobile disposant d'un \emph{Raspberry Pi 3b}, il a été développé un noeud \gls{ros} permettant de lui envoyer des commandes, d'acquérir le flux vidéo direct et de l'envoyer sur le poste de contrôle.
+			\par
+			Il s'est alors imposé un problème de conversion de flux: en effet, le protocole \gls{usb} peut supporter des trames de tailles allant jusqu'à 2048kb, alors que IP ne supporte généralement que des trames inférieures à 12kb, ceci empêchant une copie simple des données provenant de l'\gls{usb} dans des trames IP à destination du poste de contrôle. Il a donc été nécessaire de réinterpréter les paquets \gls{usb} en un protocole simple et efficace pour la transmission de données unidirectionnelle en temps réel, dont l'unité de donnée (\gls{pdu}) est la suivante:
+			
+			\info[inline]{WIP}
 			
 		\subsection{Transformation vidéo}
 		
