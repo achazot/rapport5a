@@ -1,7 +1,4 @@
 \documentclass[a4paper, 12pt]{report}
-\newcommand{\keywords}[1]{\par\textbf{Mot clefs:}\par\quad #1}
-\newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\setcounter{page}{0}\newpage}
-\newcommand{\nocounter}{\thispagestyle{empty}\setcounter{page}{0}\pagebreak}
 
 % Packages
 \usepackage{xargs}
@@ -48,6 +45,16 @@
 \usepackage{multirow}
 
 % Macros
+\definecolor{siisky}{HTML}{7AAEDD}
+\definecolor{siiblue}{HTML}{0061AA}
+\definecolor{siiorange}{HTML}{D64911}
+\definecolor{siiorange2}{HTML}{FA6900}
+\definecolor{siigrey}{HTML}{333D41}
+\definecolor{siigrey2}{HTML}{667074}
+\definecolor{siigreen}{HTML}{334100}
+\definecolor{siigreen2}{HTML}{667400}
+\definecolor{siipurple}{HTML}{8D338A}
+\definecolor{siipurple2}{HTML}{C066BD}
 \newcommandx{\content}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 \newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 \newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
@@ -57,6 +64,10 @@
 \newcolumntype{b}{X}
 \newcolumntype{s}{>{\hsize=.5\hsize}X}
 \newcolumntype{r}{>{\hsize=.2\hsize}X}
+\newcommand{\keywords}[1]{\par\textbf{Mot clefs:}\par\quad #1}
+\newcommand{\blankpage}{\leavevmode\thispagestyle{empty}\setcounter{page}{0}\newpage}
+\newcommand{\nocounter}{\thispagestyle{empty}\setcounter{page}{0}\pagebreak}
+\newcommand{\todoref}{\textcolor{red}{\textbf{[REF]}}}
 
 % Document info
 \title{Détection et classification d'objets dans un flux vidéo sphérique}
@@ -80,16 +91,6 @@
 \setlength{\parindent}{15pt}
 \setcitestyle{super,open={},close={}}
 \setlist{nolistsep}
-\definecolor{siisky}{HTML}{7AAEDD}
-\definecolor{siiblue}{HTML}{0061AA}
-\definecolor{siiorange}{HTML}{D64911}
-\definecolor{siiorange2}{HTML}{FA6900}
-\definecolor{siigrey}{HTML}{333D41}
-\definecolor{siigrey2}{HTML}{667074}
-\definecolor{siigreen}{HTML}{334100}
-\definecolor{siigreen2}{HTML}{667400}
-\definecolor{siipurple}{HTML}{8D338A}
-\definecolor{siipurple2}{HTML}{C066BD}
 \setlength{\aboverulesep}{0pt}
 \setlength{\belowrulesep}{0pt}
 \setlength{\extrarowheight}{.0ex}
@@ -120,7 +121,7 @@
 
 	% TOC
 	\setlength{\cftbeforetoctitleskip}{-7.9em}
-	\tableofcontents
+	{\footnotesize \tableofcontents}
 	\nocounter
 
 	% Introduction

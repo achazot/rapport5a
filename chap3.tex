@@ -4,27 +4,63 @@
 
 		\subsection{Vision globale}
 			
-			\content[inline]{A faire}
+			D'un point de vue matériel, le projet est séparé en deux parties: la plateforme mobile, robot sur lesquels sont connectés les périphériques de capture, et le poste de contrôle, terminal de consultation des informations par l'opérateur humain. Cette architecture simple se retrouve dans le schéma \todoref.
+			\change[inline]{Ajouter schéma archi wifibot[camera,lidar,rpi] <-> poste contrôle[pc,hid,ecran]}
+			\par
+			La plateforme mobile est un \emph{WiFiBot Lab V3}\cite{wifibot}, fourni par l'INSA Centre-Val-de-Loire, dont la carte de contrôle, munie d'un processeur x86, fonctionne sous \emph{Windows XP Embedded} et dispose d'un serveur connecté par WiFi à un routeur (fourni également) permettant de lui envoyer des commandes de contrôle des moteurs des roues. Dans un souci de conservation de l'existant et par simplicité de développement, nous avons choisi de contrôler les périphériques et de centraliser les transfers de données au travers d'un \emph{Raspberry Pi 3b}, qui possède une puissance de calcul raisonnable face à sa faible consommation et une carte WiFi intégré. Par ailleurs, le fait que micro-ordinateur fonctionne sous \emph{Linux} nous permet de conserver une continuité dans le choix des technologies logicielles à utiliser.
+			\par
+			Le poste de contrôle, connecté au même routeur que le WifiBot, est constitué d'un micro-ordinateur disposant d'un \gls{gpu} dédié (NVIDIA K620), d'un écran et de périphériques d'entrées standard (clavier, souris), permettant d'intéragir avec l'opérateur. Au vu de la faible puissance de calcul dont dispose la plateforme mobile, le choix a été fait de centraliser les traitements lourds sur ce poste.
+			\par
+			Le logiciel se scinde en deux parties bien distinctes: 
+			\begin{description}[noitemsep]
+				\item[l'Interface Homme-Machine], qui permet à l'opérateur de contrôler les mouvements de la plateforme mobile, démarrer les périphériques de capture et leurs chaînes de traitement, d'enregistrer une mission et de visionner le déroulement d'une mission enregistrée.
+				\item[le réseau de traitement de données], qui permet d'exploiter les données en sortie des périphériques de capture de manière à en tirer des informations pertinentes: la cartographie des lieux visités et les objets d'intérêt qui y sont présents.
+			\end{description}
+			Cette architecture se retrouve en \todoref, avec des éléments détaillant le fonctionnement de chaque partie.
+			\change[inline]{Ajouter schéma archi logiciel général}
 
-		\subsection{Traitement de données}
+		\subsection{Réseau de traitement de données}
 
+			\change[inline]{Ajouter schéma réseau ros}
 			\content[inline]{A faire}
 			
 		\subsection{Interface Homme-Machine}
 		
+			\change[inline]{Ajouter schéma archi ihm}
 			\content[inline]{A faire}
 
-	\section{Détails de traitements}
+	\section{Détails d'implémentation}
 	
 		\subsection{Transmission de la vidéo}
 		
-			\content[inline]{A faire}
+			%1 jpeg 1280x768 = 400ko
+			%15 fps = 6000ko/s
+			%wifi = 54mb/s
+			%     = 6.75 mo/s
+			%benchmarks: 17.6 mb/s
+			La caméra Ricoh Theta S comporte une carte WiFi, ce qui permet, pour une utilisation \og normale \fg{} (avec l'application Android fournisseur) de s'y connecter avec un téléphone fonctionnant sous Android, afin d'y transférer les données de la caméra. Ces données peuvent prendre la forme de photos ou de vidéos, préalablement enregistrées sur la mémoire interne de la caméra et donc récupérées en différé, ou d'un mode spécial, nommé \emph{live}, qui permet de transmettre un flux vidéo continu correspondant à la capture des objectifs de la caméra en temps réel. Ce mode permet de transmettre un aperçu au téléphone avant de prendre une photo, uniquement supporté par l'application Android du fabricant. Devant la demande croissante du public d'utiliser ce mode de \og livestream \fg{}, les développeurs ont choisi de le rendre disponible sur pc, au travers d'un pilote matériel permettant aux OS \emph{Windows} et \emph{Mac OS} de considérer la caméra, alors branchée à l'ordinateur par \gls{usb}, comme une webcam, permettant ainsi la plupart des programmes d'exploiter ce flux vidéo. Ce pilote se charge de communiquer avec le bon protocole les commandes utilisateurs à la caméra et de transformer le flux vidéo dans un format exploitable. Après analyse du pilote windows, il a été découvert (car non exprimé dans la documentation du produit) qu'il utilise la bibliothèque \emph{libUVC}, et donc que la communication avec la caméra est effectuée au travers du protocole \gls{uvc}. La caméra étant sur la plateforme mobile disposant d'un \emph{Raspberry Pi 3b}, il a été développé un noeud \gls{ros} permettant de lui envoyer des commandes, d'acquérir le flux vidéo direct et de l'envoyer sur le poste de contrôle.
+			\par
+			Il s'est alors imposé un problème de conversion de flux: en effet, le protocole \gls{usb} peut supporter des trames de tailles allant jusqu'à 2048kb, alors que IP ne supporte généralement que des trames inférieures à 12kb, ceci empêchant une copie simple des données provenant de l'\gls{usb} dans des trames IP à destination du poste de contrôle. Il a donc été nécessaire de réinterpréter les paquets \gls{usb} en un protocole simple et efficace pour la transmission de données unidirectionnelle en temps réel, dont l'unité de donnée (\gls{pdu}) est la suivante:
+			
+			\info[inline]{WIP}
 			
 		\subsection{Transformation vidéo}
 		
 			\content[inline]{A faire}
+
+		\subsection{Détection et Classification}
+		
+			\content[inline]{A faire}
 			
 		\subsection{Présentation vidéo et incrustation}
+		
+			\content[inline]{A faire}
+			
+		\subsection{Contrôle du robot}
+		
+			\content[inline]{A faire}
+			
+		\subsection{Modularité de l'IHM}
 		
 			\content[inline]{A faire}
 			
@@ -43,7 +79,9 @@
 	
 		\subsection{Manuel utilisateur}
 		
-			\content[inline]{A faire}
+			Le projet est destiné à être poursuivi lors de stages ultérieurs, c'est pourquoi il a été décidé de rédiger un manuel d'utilisation, autant à l'intention des développeurs que pour un utilisateur \og opérateur \fg{}. Il regroupe un manuel d'installation, un guide de résolution des problèmes, un manuel d'utilisation de l'interface homme-machine et un guide de développement, qui explique le fonctionnement du logiciel et propose des améliorations possibles.
+			\par
+			Ce manuel a été rédigé en Markdown \cite{markdown}, un langage de balisage léger permettant une mise en forme rapide du texte et l'inclusion d'images. Il est compilé sous la forme d'un site html statique par MkDocs\cite{mkdocs}, ce qui permet une mise en forme agréable, ainsi qu'une navigation simple et plus intuitive qu'un document \og classique \fg{}. Il est donc prêt à être hébergé sur un serveur web.
 			
 		\subsection{Documentation}
 		
