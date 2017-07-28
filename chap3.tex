@@ -11,7 +11,7 @@
 			\par
 			Le poste de contrôle, connecté au même routeur que le WifiBot, est constitué d'un micro-ordinateur disposant d'un \gls{gpu} dédié (NVIDIA K620), d'un écran et de périphériques d'entrées standard (clavier, souris), permettant d'intéragir avec l'opérateur. Au vu de la faible puissance de calcul dont dispose la plateforme mobile, le choix a été fait de centraliser les traitements lourds sur ce poste.
 			\par
-			Le logiciel se scinde en deux parties bien distinctes: 
+			Le logiciel se scinde en deux parties bien distinctes:
 			\begin{description}[noitemsep]
 				\item[l'Interface Homme-Machine], qui permet à l'opérateur de contrôler les mouvements de la plateforme mobile, démarrer les périphériques de capture et leurs chaînes de traitement, d'enregistrer une mission et de visionner le déroulement d'une mission enregistrée.
 				\item[le réseau de traitement de données], qui permet d'exploiter les données en sortie des périphériques de capture de manière à en tirer des informations pertinentes: la cartographie des lieux visités et les objets d'intérêt qui y sont présents.
@@ -33,20 +33,53 @@
 	
 		\subsection{Transmission de la vidéo}
 		
-			%1 jpeg 1280x768 = 400ko
-			%15 fps = 6000ko/s
-			%wifi = 54mb/s
-			%     = 6.75 mo/s
-			%benchmarks: 17.6 mb/s
 			La caméra Ricoh Theta S comporte une carte WiFi, ce qui permet, pour une utilisation \og normale \fg{} (avec l'application Android fournisseur) de s'y connecter avec un téléphone fonctionnant sous Android, afin d'y transférer les données de la caméra. Ces données peuvent prendre la forme de photos ou de vidéos, préalablement enregistrées sur la mémoire interne de la caméra et donc récupérées en différé, ou d'un mode spécial, nommé \emph{live}, qui permet de transmettre un flux vidéo continu correspondant à la capture des objectifs de la caméra en temps réel. Ce mode permet de transmettre un aperçu au téléphone avant de prendre une photo, uniquement supporté par l'application Android du fabricant. Devant la demande croissante du public d'utiliser ce mode de \og livestream \fg{}, les développeurs ont choisi de le rendre disponible sur pc, au travers d'un pilote matériel permettant aux OS \emph{Windows} et \emph{Mac OS} de considérer la caméra, alors branchée à l'ordinateur par \gls{usb}, comme une webcam, permettant ainsi la plupart des programmes d'exploiter ce flux vidéo. Ce pilote se charge de communiquer avec le bon protocole les commandes utilisateurs à la caméra et de transformer le flux vidéo dans un format exploitable. Après analyse du pilote windows, il a été découvert (car non exprimé dans la documentation du produit) qu'il utilise la bibliothèque \emph{libUVC}, et donc que la communication avec la caméra est effectuée au travers du protocole \gls{uvc}. La caméra étant sur la plateforme mobile disposant d'un \emph{Raspberry Pi 3b}, il a été développé un noeud \gls{ros} permettant de lui envoyer des commandes, d'acquérir le flux vidéo direct et de l'envoyer sur le poste de contrôle.
 			\par
-			Il s'est alors imposé un problème de conversion de flux: en effet, le protocole \gls{usb} peut supporter des trames de tailles allant jusqu'à 2048kb, alors que IP ne supporte généralement que des trames inférieures à 12kb, ceci empêchant une copie simple des données provenant de l'\gls{usb} dans des trames IP à destination du poste de contrôle. Il a donc été nécessaire de réinterpréter les paquets \gls{usb} en un protocole simple et efficace pour la transmission de données unidirectionnelle en temps réel, dont l'unité de donnée (\gls{pdu}) est la suivante:
-			
-			\info[inline]{WIP}
+			Une problématique arrivée rapidement est celle de la transmission sur le WiFi.
+			La Raspberry Pi dispose d'une carte WiFi qui ne supporte que la norme 802.11g, et ne peut donc transférer des données qu'au débit réel maximal de 25 Mb/s.
+			Après une analyse de paquet en cas réel, la bande passante disponible pour le flux vidéo n'est que de 17,6 Mb/s, soit 2,2 Mo/s.
+			Une image \gls{jpeg} en sortie de la caméra pèse en moyenne 400ko, et la caméra opère à 15 images/s, ce qui nécessite un débit de 6M/s.
+			La Raspberri Pi dispose d'un \gls{gpu} \emph{VideoCore IV}\cite{videocore}, servant en priorité à encoder et décoder des vidéos (par exemple, pour lire un flux vidéo en haute qualité depuis internet).
+			Il est donc possible d'utiliser la bibliothèque \emph{OpenMAX} pour encoder une vidéo, qui devrait donc peser moins qu'une séquence d'images décorrélées.
+			Cependant, après de nombreux éssais d'envoi de flux converti (au format h264, le format le plus optimisé pour cette puce graphique), il s'est avéré que l'encodage entraîne un surplus de traitement au niveau du processeur de la Raspberry, qui entraîne l'introduction d'une latence importante entre la capture d'une image et sa visualisation sur le poste opérateur.
+			Il a donc été décidé de réduire la vitesse du flux de la caméra à 5 images/s, afin de ne nécessiter que 2Mo/s de bande passante.
+			%1 jpeg 1280x768 = 400ko
+			% 5 fps = 2000ko/s
+			%15 fps = 6000ko/s
+			%wifi        54   mb/s | 6.75  mo/s
+			%            25   mb/s | 3.125 mo/s
+			%benchmarks: 17.6 mb/s | 2.2   mo/s
+			\par
+			Les images sont donc extraites des paquets \gls{usb} et envoyées au poste de contrôle encapsulées dans un protocole simple et efficace pour la transmission de données unidirectionnelle en temps réel, dont l'unité de donnée (\gls{pdu}) est la suivante:
+
+			\begin{center}
+				\scriptsize
+				\begin{tabularx}{\textwidth}[h]{|Y|Y||Y|}
+					\toprule
+					\multicolumn{2}{|c||}{entête (24 octets)} & charge utile (variable) \\
+					\midrule
+					Identifiant protocole (8 octets) & taille image (16 octets) & données (variable)\\
+					\bottomrule
+				\end{tabularx}
+			\end{center}
+
+			Ces trames sont encapsulées dans des trames \gls{tcp} pour laisser le système s'occupper de la fragmentation et de l'ordonnacement, ce qui simplifie le traitement du côté réception et du côté traitement des données (pas de mise en file d'attente).
 			
 		\subsection{Transformation vidéo}
 		
-			\content[inline]{A faire}
+			En sortie de la caméra, l'image correspond aux photos prises par les deux objectifs, chacun ayant un angle de prise de vue de $190^{\circ}$, horizontalement et verticalement, et chacun étant de type \gls{fisheye} circulaire. Un exemple d'image non traitée est représenté \todoref. Le fait de disposer de deux photos \gls{fisheye} qui couvrent l'ensemble du point de vue à la position de la caméra s'appelle couramment \emph{Dual Fisheye}. On peut parler de représentation sphérique d'un point de vue, l'angle de champ étant de $360^{\circ}\times180^{\circ}$. Du fait de la déformation importante des ligne droite ne passant pas par le centre de l'objectif, la détection et la classification des objects contenus dans la scène n'est pas possible, car beaucoup trop imprécise, sur l'image en sortie de caméra non traitée.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/capture.jpg}
+				\caption{Image non traitée capturée en sortie de la caméra}
+				\label{fig:rawcapture}
+			}
+			\end{figure}
+			\par
+			Comme vu dans la section précédente, le pilote fourni par le fabricant transforme cette image en applicant une projection spatiale sur chacun de ses pixels de manière à obtenir une couverture complète du point de vue en projection équirectangulaire. Cette méthode permet de voir l'intégralité de la surface d'une sphère sur un plan. La \todoref permet d'expliquer plus intuitivement cette opération.
+		
+		\info[inline]{WIP}
 
 		\subsection{Détection et Classification}
 		
@@ -91,3 +124,6 @@
 		
 			\content[inline]{A faire}
 				
+		\subsection{Communication interne}
+		
+			\content[inline]{A faire}

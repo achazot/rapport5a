@@ -26,7 +26,7 @@
 			}
 			\end{figure}
 
-			\improvement[inline]{Ajouter du contenu ?}
+			\improvement[inline]{Ajouter justification des technos employées}
 
 
 		\subsection{Exigences}
@@ -66,11 +66,7 @@
 			\par
 			L'extracteur de caractéristiques est un algorithme qui permet de traduire une image, ou partie d'une image, en une représentation mathématique de caractéristiques visuelles qu'elle contient (coins, traits, points, dégradés \dots). L'approche classique consiste à considérer l'entrée comme un élément d'un espace vectoriel de dimension $n_{0}$ et d'y appliquer une fonction mathématique pour obtenir un résultat appartenant à un espace vectoriel de dimension $n_{1}$ avec $n_{1} < n_{0}$, qu'on appelle \emph{vecteur de caractéristiques} ou \emph{descripteur}. L'intérêt de ces traitements réside dans cette réduction de dimensions, qui constitue en quelque sorte un résumé de la donnée, et permet de distinguer plus facilement des classes grâce à l'algorithme de classification. Il existe de nombreux algorithmes extracteurs de caractéristiques, autant qu'il existe de nombreux moyens de décrire les caractéristiques visuelles d'une image. Citons les algorithmes \emph{SIFT}\cite{sift}, \emph{HOG}\cite{hog} et \emph{SURF}\cite{surf} comme exemples, par leur utilisation régulière dans la communauté du traitement du signal. Contrairement au classifieur, ces algorithmes sont fixes, c'est à dire que pour une même entrée, ils produiront toujours la même sortie.
 			\par
-			Le classifieur, souvent basé sur des \emph{Machines à Vecteur de Support}\cite{svm}, permet de discriminer des groupes au sein des résultats, et donc de déterminer l'appartenance d'un résultat à une classe. Afin de déterminer la classe résultante d'un objet ($y_{i}$), il effectue des sommes pondérées des composantes de ses vecteurs de caractéristiques, et les compare à des valeurs seuils permettant d'activer ou non une sortie. Un algorithme classifieur est généralement entraînable, c'est à dire qu'en lui fournissant un ensemble de couples (vecteurs de caractéristiques; résultat attendu $\hat{y}_{i}$) il déterminera lui même la loi permettant de les séparer. L'enjeu est donc de réduire l'écart entre $y$ et $\hat{y}$, cette phase d'entraînement revient donc à minimiser une fonction objectif en modulant les pondérations des sommes ($\theta_{i}$) jusqu'à obtenir une loi de discrimination optimale. On peut trouver cette fonction objectif, par exemple, sous forme de moindres carrés de résidus:
-			\begin{center} $ E = J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i} )^2 $ \end{center}
-			ou d'erreur quadratique moyenne:
-			\begin{center} $ E = J({\theta}) =  \frac{1}{n}\sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center}
-			Un tel comportement correspond à un apprentissage supervisé, où la réponse correcte est connue, permettant à la machine de s'améliorer. Une fois cette phase achevée, le système est théoriquement apte à classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues : c'est la généralisation.
+			Le classifieur, souvent basé sur des \emph{Machines à Vecteur de Support}\cite{svm}, permet de discriminer des groupes au sein des résultats, et donc de déterminer l'appartenance d'un résultat à une classe. Afin de déterminer la classe résultante d'un objet ($y_{i}$), il effectue des sommes pondérées des composantes de ses vecteurs de caractéristiques, et les compare à des valeurs seuils permettant d'activer ou non une sortie. Un algorithme classifieur est généralement entraînable, c'est à dire qu'en lui fournissant un ensemble de couples (vecteurs de caractéristiques; résultat attendu $\hat{y}_{i}$) il déterminera lui même la loi permettant de les séparer. L'enjeu est de réduire l'écart entre $y$ et $\hat{y}$, cette phase d'entraînement revient donc à minimiser une fonction objectif en modulant les pondérations des sommes ($\theta_{i}$) jusqu'à obtenir une loi de discrimination optimale. Un tel comportement correspond à un apprentissage supervisé, où la réponse correcte est connue, permettant à la machine de s'améliorer. Une fois cette phase achevée, le système est théoriquement apte à classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues.
 
 		\subsection{Apprentissage profond et R-CNN}
 
