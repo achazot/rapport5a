@@ -6,8 +6,10 @@
 *.glo
 *.gls
 *.ist
-!premade/*.pdf
 *.aux
 *.swp
 *.xdy
 *.lof
+tmp/*
+!premade/*.pdf
+!tmp/.gitkeep

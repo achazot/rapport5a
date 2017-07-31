@@ -66,8 +66,9 @@
 			Ces trames sont encapsulées dans des trames \gls{tcp} pour laisser le système s'occupper de la fragmentation et de l'ordonnacement, ce qui simplifie le traitement du côté réception et du côté traitement des données (pas de mise en file d'attente).
 			
 		\subsection{Transformation vidéo}
+		\label{sub:transfo}
 		
-			En sortie de la caméra, l'image correspond aux photos prises par les deux objectifs, chacun ayant un angle de prise de vue de $190^{\circ}$, horizontalement et verticalement, et chacun étant de type \gls{fisheye} circulaire. Un exemple d'image non traitée est représenté \todoref. Le fait de disposer de deux photos \gls{fisheye} qui couvrent l'ensemble du point de vue à la position de la caméra s'appelle couramment \emph{Dual Fisheye}. On peut parler de représentation sphérique d'un point de vue, l'angle de champ étant de $360^{\circ}\times180^{\circ}$. Du fait de la déformation importante des ligne droite ne passant pas par le centre de l'objectif, la détection et la classification des objects contenus dans la scène n'est pas possible, car beaucoup trop imprécise, sur l'image en sortie de caméra non traitée.
+			En sortie de la caméra, l'image correspond aux photos prises par les deux objectifs, chacun ayant un angle de prise de vue de $190^{\circ}$, horizontalement et verticalement, et chacun étant de type \gls{fisheye} circulaire. Un exemple d'image non traitée est représenté \autoref{fig:rawcapture}. Le fait de disposer de deux photos \gls{fisheye} qui couvrent l'ensemble du point de vue à la position de la caméra s'appelle couramment \emph{Dual Fisheye}. On peut parler de représentation sphérique d'un point de vue, l'angle de champ étant de $360^{\circ}\times180^{\circ}$. Les caractéristiques spatiales visibles observent un niveau de déformation proportionnel à leur éloignement du centre de l'objectif. À défaut de traitement, la détection et la classification des objects contenus dans la scène présentent des imprécisions qui rendent de tels résultats inexploitables.
 			\begin{figure}[h]
 			{
 				\centering
@@ -77,34 +78,119 @@
 			}
 			\end{figure}
 			\par
-			Comme vu dans la section précédente, le pilote fourni par le fabricant transforme cette image en applicant une projection spatiale sur chacun de ses pixels de manière à obtenir une couverture complète du point de vue en projection équirectangulaire. Cette méthode permet de voir l'intégralité de la surface d'une sphère sur un plan. La \todoref permet d'expliquer plus intuitivement cette opération.
-		
+			Comme évoqué dans la section précédente, le pilote fourni par le fabricant transforme cette image en appliquant une projection spatiale sur chacun de ses pixels de manière à obtenir une couverture complète du point de vue en projection équirectangulaire. Cette méthode permet de voir l'intégralité de la surface d'une sphère sur un plan. Les figures suivantes visent à illustrer cette opération.
+			On considère la scène \autoref{fig:cage}, où notre point de vue correspond à la sphère rouge. Notre scène comporte donc une cage dont les faces ont des couleurs différentes et des numéros permettant de mettre les caractéristiques spatiales en valeur.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[width=0.6\textwidth]{figures/cage.png}
+				\caption{Scène d'exemple vue de l'extérieur}
+				\label{fig:cage}
+			}
+			\end{figure}
+			\par
+			On se place maintenant à l'intérieur, en direction du côté violet (face du fond), et on prend deux photographies -- respectivement vers l'avant et vers l'arrière -- à l'aide d'un objectif \gls{fisheye} avec un angle de champ de $180^{\circ}$. On obtient alors l'ensemble du point de vue sous la forme de deux disques comme vus en \autoref{fig:dualfish}.
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/dfish.png}
+				\caption{Vue sphérique \og dual fisheye \fg{}}
+				\label{fig:dualfish}
+			}
+			\end{figure}
+			\par
+			On crée alors un rectangle où chaque pixel trouve un correspondant dans ces disques, et on obtient une projection equirectangulaire de l'espace sphérique d'origine. (\autoref{fig:equirect}).
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/equirect.png}
+				\caption{Projection equirectangulaire}
+				\label{fig:equirect}
+			}
+			\end{figure}
+			L'opération mathématique revient à effectuer trois projections spatiales successives pour chaque pixel, ce qui justifie l'emploi d'un processeur graphique (haute parallélisation des calculs).
+			\par
+			La première projection revient à retrouver les coordonnées sphériques réelles de l'objectif de la caméra à partir des coordonnées polaires des disques \emph{fisheye}. En effet, l'objectif est vu comme une hémisphère imparfaite (base circulaire mais profondeur moindre), dont la profondeur est représentée par la distance focale $f$.
+			\begin{figure}[htb]
+				\centering
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/polar.pdf}
+					\captionof{figure}{Coordonnées cartésiennes sur image fisheye}
+					\label{fig:pcart1}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/spherical.pdf}
+					\captionof{figure}{Coordonnées sphériques}
+					\label{fig:def1}
+				\end{minipage}
+			\end{figure}
+
+			
+			Bien qu'elles soient toujours déformées, les faces orange et verte deviennent assez linéaires pour présenter des caractéristiques spatiales détectables. On opère alors la détection sur cette image.
+
 		\info[inline]{WIP}
 
 		\subsection{Détection et Classification}
 		
+			\lipsum[5]
 			\content[inline]{A faire}
 			
 		\subsection{Présentation vidéo et incrustation}
 		
-			\content[inline]{A faire}
+		\begin{figure}[htb]
+			\centering
+			\begin{minipage}{.5\textwidth}
+				\centering
+				\includegraphics[width=0.95\linewidth]{figures/def0.png}
+				\captionof{figure}{Image equirectangulaire}
+				\label{fig:def0}
+			\end{minipage}%
+			\begin{minipage}{.5\textwidth}
+				\centering
+				\includegraphics[width=0.95\linewidth]{figures/def1.png}
+				\captionof{figure}{Texture mapping }
+				\label{fig:def1}
+			\end{minipage}
+			
+			\vspace{0.5cm}
+			
+			\begin{minipage}{.5\textwidth}
+				\centering
+				\includegraphics[width=0.95\linewidth]{figures/def2.png}
+				\captionof{figure}{Déformation}
+				\label{fig:def2}
+			\end{minipage}%
+			\begin{minipage}{.5\textwidth}
+				\centering
+				\includegraphics[width=0.95\linewidth]{figures/def3.png}
+				\captionof{figure}{\emph{Sphere mapping}}
+				\label{fig:def3}
+			\end{minipage}
+		\end{figure}
+		\content[inline]{A faire}
 			
 		\subsection{Contrôle du robot}
 		
+			\lipsum[1]
 			\content[inline]{A faire}
 			
 		\subsection{Modularité de l'IHM}
 		
+			\lipsum[2]
 			\content[inline]{A faire}
 			
 	\section{Méthodes de travail}
 
 		\subsection{Git-flow}
 		
+			\lipsum[3]
 			\content[inline]{A faire}
 			
 		\subsection{Emprunts agiles}
 		
+			\lipsum[4]
 			\content[inline]{A faire}
 			
 

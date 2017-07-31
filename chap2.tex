@@ -5,7 +5,7 @@
 		\subsection{Le concept du système}
 			
 			% Idée globale du système
-			Le projet vise à créer un démonstrateur d'un concept plus large, à savoir un système permettant de piloter un ensemble de robots et d'exploiter les informations issues de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains susceptibles d'être dangereux. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot équipé d'un \gls{lidar} et d'une caméra sphérique, permettant de contrôler ses déplacements, d'analyser les données acquises par ces deux périphériques, et d'afficher les résultats de ces traitements dans une interface utilisateur.
+			Le projet vise à créer un démonstrateur d'un concept plus large, à savoir un système permettant de piloter un ensemble de robots et d'exploiter les informations issues de leurs périphériques de capture afin d'effectuer des missions de reconnaissance sans déployer de troupes au sol, et risquer de mettre leurs vies en dangers sur des terrains potentiellement à risques. Ce démonstrateur illustre donc la faisabilité de ce concept, mais d'une manière plus limitée. Le but est de développer un système opérationnel pour un seul robot équipé d'un \gls{lidar} et d'une caméra sphérique, permettant de contrôler ses déplacements, d'analyser les données acquises par ces deux périphériques, et d'afficher les résultats de ces traitements dans une interface utilisateur.
 			\par
 			% Mon sujet de stage
 			Devant l'ampleur du travail à accomplir, le projet a été scindé en deux sujets de stage, chacun correspondant au traitement des données acquise par un des deux périphériques. Le sujet dont il est question dans ce document est relatif à l'exploitation de la caméra sphérique. On dégage trois objectifs principaux à la mission décrite dans le sujet du stage:
@@ -15,7 +15,7 @@
 				\item Développement d'une brique logicielle permettant d'afficher les résultats de la détection incrustés à la vidéo.
 			\end{itemize}
 			\par
-			Préalablement à la conception architecturale du projet, un document de \improvement{ajouter ref annexe + corriger STBL}\emph{Spécification Technique du Besoin Logiciel (STBL)} a été réalisé afin de fixer détailler ces trois objectifs et de référencer les exigences de qualité. A cette occasion, des éléments d'analyse fonctionnelle ont été effectués afin de mieux cerner le besoin, tels qu'un diagramme de cas d'utilisation (\autoref{fig:usecase}), qui permet de préciser le besoin d'un point de vue utilisateur et aide à définir les exigences fonctionnelles.
+			Préalablement à la conception architecturale du projet, un document de \improvement{ajouter ref annexe + corriger STBL}\emph{Spécification Technique du Besoin Logiciel (STBL)} a été réalisé afin de détailler ces trois objectifs et de référencer les exigences de qualité. A cette occasion, des éléments d'analyse fonctionnelle ont été menés afin de mieux cerner le besoin. Le diagramme de cas d'utilisation suivant (\autoref{fig:usecase}) définit les exigences fonctionnelles et le cadre du projet d'un point de vue de l'utilisateur.
 			
 			\begin{figure}[h]
 			{
@@ -85,7 +85,7 @@
 
 		\subsection{Vidéo sphérique}
 			% de 1 à 36 objectifs
-			La photographie sphérique, aussi connue sous le nom de photographie à 360\degre ou \emph{VR photography} (pour réalité virtuelle), s'apparente à la photographie panoramique, en ceci qu'elle vise à capturer un point de vue sous la forme d'une image avec un champ de vision exceptionnellement large (ratio supérieur à $1:2$)\cite{fnumpano}. En effet, le but est de représenter une scène complète dans une seule image, comme on pourrait l'observer en effectuant un tour complet autour d'un point fixe. Le concept s'est fortement démocratisé au travers de son apparition dans \emph{Google StreetView}, et plus récemment par l'importante médiatisation de la réalité virtuelle, permettant une plus grande immersion lors du visionnage de photographie ou de vidéos sphériques.
+			La photographie sphérique, aussi connue sous le nom de photographie à 360\degre ou \emph{VR photography} (pour réalité virtuelle), s'apparente à la photographie panoramique, en ceci qu'elle vise à capturer un point de vue sous la forme d'une image avec un champ de vision exceptionnellement large (ratio supérieur à $1:2$)\cite{fnumpano}. En effet, le but est de représenter une scène complète dans une seule image, comme on pourrait l'observer en effectuant un tour complet autour d'un point fixe. Le concept s'est fortement démocratisé au travers de son apparition dans \emph{Google StreetView}, et plus récemment par l'importante médiatisation de la réalité virtuelle, permettant une plus grande immersion lors du visionnage de photographies ou de vidéos sphériques.
 			\par
 			L'obtention d'une image prête au visionnage n'est théoriquement pas possible avec une seule prise de vue. Les techniques utilisées pour obtenir de telles images reposent toutes sur l'assemblage de plusieurs photographies, ce qui peut faire apparaître des incohérences dans la scène lorsqu'elles sont prises à des temps différents (les sujets qui se déplacent peuvent être présents sur plusieurs photographies, donc plusieurs parties de la scène). Pour obtenir le plus de cohérence dans le flux vidéo et minimiser le traitement dû à l'assemblage, il a donc été décidé d'acquérir un appareil qui permet de capturer instantanément une scène complète avec plusieurs objectifs.
 			\improvement[inline]{Ajouter images ou schémas}
@@ -104,7 +104,7 @@
 				\item Prix ne dépassant pas 500\euro
 			\end{itemize}
 			
-			Notre choix s'était d'abord porté sur le produit Insta\oldstylenums{360} 4K\cite{insta360}, qui possède un système d'assemblage en temps réel intégré, mais le produit n'étant pas disponible au moment de l'achat, nous avons dûs nous reporter sur la caméra Theta S de Ricoh\cite{ricohthetas}, possédant une qualité d'image moindre et aucun moyen natif d'assemblage en temps réel sous systèmes linux.
+			Notre choix s'est d'abord porté sur le produit Insta\oldstylenums{360} 4K\cite{insta360}, qui possède un système d'assemblage en temps réel intégré et une très bonne qualité d'image. Cependant, le produit n'étant pas disponible au moment de l'achat, nous avons dûs nous reporter sur la caméra Theta S de Ricoh\cite{ricohthetas}, possédant une qualité d'image moindre et aucun moyen natif d'assemblage en temps réel sous systèmes linux. Ce dernier point s'est avéré crucial dans l'organisation du travail, car il a nécessité une charge de travail importante, détaillée en \ref{sub:transfo}.
 
 	\section{Problématiques soulevées}
 
