@@ -171,10 +171,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.959798"
-     inkscape:cx="125.93613"
-     inkscape:cy="107.34854"
+     inkscape:cx="92.348557"
+     inkscape:cy="109.24257"
      inkscape:document-units="mm"
-     inkscape:current-layer="g5465"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="cm"
      inkscape:snap-page="true"
@@ -191,9 +191,9 @@
      inkscape:snap-center="true"
      inkscape:snap-text-baseline="true"
      inkscape:window-width="1920"
-     inkscape:window-height="1057"
-     inkscape:window-x="1920"
-     inkscape:window-y="0"
+     inkscape:window-height="1025"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      showguides="false">
     <inkscape:grid
@@ -211,7 +211,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -221,12 +221,13 @@
      id="layer1"
      transform="translate(0,-237.00002)">
     <g
-       id="g5465">
+       id="g5465"
+       transform="matrix(0.88728828,0,0,0.88728828,2.1880237,29.657378)">
       <path
          sodipodi:nodetypes="ccc"
          inkscape:connector-curvature="0"
          id="path4489"
-         d="m 30,249.00002 0,18 h 34.999999"
+         d="m 30,249.00002 v 18 h 32.999999"
          style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker5056);marker-end:url(#Arrow1Mend)" />
       <path
          inkscape:connector-curvature="0"
@@ -302,14 +303,14 @@
          x="47.673744"
          style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';stroke-width:0.26458332px"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.38554562px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';stroke-width:0.26458332px"
            y="256.14709"
            x="47.673744"
            id="tspan4562"
-           sodipodi:role="line">P(x<tspan
-   style="font-size:1.41111111px;baseline-shift:sub"
+           sodipodi:role="line">P''(x<tspan
+   style="font-size:1.59036374px;baseline-shift:sub"
    id="tspan5584">2</tspan>,y<tspan
-   style="font-size:1.41111111px;baseline-shift:sub"
+   style="font-size:1.59036374px;baseline-shift:sub"
    id="tspan5580">2</tspan>)</tspan></text>
       <text
          id="text4538-5"
@@ -324,13 +325,13 @@
            sodipodi:role="line">y</tspan></text>
       <text
          id="text4538-5-6"
-         y="269.09659"
-         x="63.979908"
+         y="269.00003"
+         x="61.471867"
          style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans';stroke-width:0.26458332px"
-           y="269.09659"
-           x="63.979908"
+           y="269.00003"
+           x="61.471867"
            id="tspan4536-0-5"
            sodipodi:role="line">x</tspan></text>
       <path
@@ -356,10 +357,10 @@
            x="43.801384"
            id="tspan4562-6"
            sodipodi:role="line">x<tspan
-   style="font-size:1.41111111px;baseline-shift:sub"
+   style="font-size:1.41111112px;baseline-shift:sub"
    id="tspan5617">2</tspan></tspan></text>
       <rect
-         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.265;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect4594"
          width="60"
          height="30.000002"
@@ -376,7 +377,7 @@
            x="27.963827"
            id="tspan4562-6-6"
            sodipodi:role="line">y<tspan
-   style="font-size:1.41111111px;baseline-shift:sub"
+   style="font-size:1.41111112px;baseline-shift:sub"
    id="tspan5615">2</tspan></tspan></text>
     </g>
   </g>

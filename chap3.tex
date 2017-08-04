@@ -25,7 +25,8 @@
 			\content[inline]{A faire}
 			
 		\subsection{Interface Homme-Machine}
-		
+		\label{sub:ihm}
+
 			\change[inline]{Ajouter schéma archi ihm}
 			\content[inline]{A faire}
 
@@ -79,6 +80,7 @@
 			\end{figure}
 			\par
 			Comme évoqué dans la section précédente, le pilote fourni par le fabricant transforme cette image en appliquant une projection spatiale sur chacun de ses pixels de manière à obtenir une couverture complète du point de vue en projection équirectangulaire. Cette méthode permet de voir l'intégralité de la surface d'une sphère sur un plan. Les figures suivantes visent à illustrer cette opération.
+			\par
 			On considère la scène \autoref{fig:cage}, où notre point de vue correspond à la sphère rouge. Notre scène comporte donc une cage dont les faces ont des couleurs différentes et des numéros permettant de mettre les caractéristiques spatiales en valeur.
 			\begin{figure}[h]
 			{
@@ -108,29 +110,78 @@
 				\label{fig:equirect}
 			}
 			\end{figure}
-			L'opération mathématique revient à effectuer trois projections spatiales successives pour chaque pixel, ce qui justifie l'emploi d'un processeur graphique (haute parallélisation des calculs).
+			Bien qu'elles soient toujours déformées, les faces orange et verte deviennent assez linéaires pour présenter des caractéristiques spatiales détectables. On opère alors la détection sur cette image.
 			\par
-			La première projection revient à retrouver les coordonnées sphériques réelles de l'objectif de la caméra à partir des coordonnées polaires des disques \emph{fisheye}. En effet, l'objectif est vu comme une hémisphère imparfaite (base circulaire mais profondeur moindre), dont la profondeur est représentée par la distance focale $f$.
+			L'opération mathématique correspondante revient à effectuer trois projections spatiales successives pour chaque pixel, ce qui justifie l'emploi du processeur graphique pour sa haute parallélisation des calculs.
+			\par
+			La première projection revient à retrouver les coordonnées sphériques réelles de l'objectif de la caméra à partir des coordonnées polaires des disques \emph{fisheye}. En effet, l'objectif est vu comme une hémisphère parfaite de rayon 1, afin de simplifier les calculs. Notons toutefois que l'objectif réel n'est pas une hémisphère parfaite, ce qui introduit l'utilisation de la distance focale dans les calculs afin de minimiser les déformations induites par cette approximation.
 			\begin{figure}[htb]
 				\centering
 				\begin{minipage}{.5\textwidth}
 					\centering
 					\includegraphics[width=0.95\linewidth]{figures/polar.pdf}
-					\captionof{figure}{Coordonnées cartésiennes sur image fisheye}
+					\captionof{figure}{Coordonnées \newline cartésiennes sur image fisheye}
 					\label{fig:pcart1}
 				\end{minipage}%
 				\begin{minipage}{.5\textwidth}
 					\centering
 					\includegraphics[width=0.95\linewidth]{figures/spherical.pdf}
-					\captionof{figure}{Coordonnées sphériques}
-					\label{fig:def1}
+					\captionof{figure}{Coordonnées sphériques (lentille de la caméra)}
+					\label{fig:psph}
 				\end{minipage}
 			\end{figure}
-
+			\par
+			Le repère $(O,\vec{x},\vec{y})$ de la \autoref{fig:pcart1}, correspond à un disque de la photographie \emph{dual fisheye}, $O$ étant son centre.
+			Le repère $(O,\vec{x},\vec{y},\vec{z})$ de la \autoref{fig:psph} correspond à l'espace réel de l'objectif de la caméra, avec $O'$ qui correspond au foyer focal du système optique.
+			La correspondance entre ces repères est définie comme suit:
+			\begin{center}
+				$\forall P(x_{0},y_{0}) \in (O,\vec{x},\vec{y}), \exists P'(r,\theta,\phi) \in (O,\vec{x},\vec{y},\vec{z})$ avec $(x_{0},y_{0}) \in [-1;1]^2$ tel que: \newline
+				$P'(x_{1},y_{1},z_{1}): \left\{
+				\begin{array}{ll}
+				\theta = \cos^{-1}{\left(\frac{x_{0}}{\sqrt{x_{0}^2+y_{0}^2}}\right)} \\
+				\phi = \sin^{-1}{\left(\sqrt{x_{0}^2+y_{0}^2}\right)} \\
+				r = 1
+				\end{array}
+				\right.\ $
+			\end{center}
+			L'étape suivante est d'utiliser les coordonnées cartésiennes de $P'$ afin d'obtenir la position (latitude, longitude) du point sur la sphère de l'espace de l'objectif de la caméra:
+			\begin{center}
+				$P'(x_{1},y_{1},z_{1}): \left\{
+				\begin{array}{ll}
+				x_{1} = r \sin \phi \cos \theta \\
+				y_{1} = r \sin \phi \sin \theta \\
+				z_{1} = r \cos \theta
+				\end{array}
+				\right.\ $ \newline \newline
+				$ latitude = \tan^{-1}_{2}\left(y_{1}, x_{1}\right) $ \newline
+				$ longitude = \tan^{-1}_{2}\left(z_{1}, \sqrt{x_{1}^2+y_{1}^2}\right) $ \newline
+			\end{center}
+			Finalement, on projette ces coordonnées depuis le plan sphérique sur un plan equirectangulaire:
+			\begin{center}
+				$P''(x_{2},y_{2}): \left\{
+				\begin{array}{ll}
+				x_{2} = \frac{longitude}{\pi} \\
+				y_{2} = \frac{2 \times latitude}{\pi}
+				\end{array}
+				\right.\ $
+			\end{center}
 			
-			Bien qu'elles soient toujours déformées, les faces orange et verte deviennent assez linéaires pour présenter des caractéristiques spatiales détectables. On opère alors la détection sur cette image.
-
-		\info[inline]{WIP}
+			\begin{figure}[htb]
+				\centering
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/cartesian.pdf}
+					\captionof{figure}{Latitude - longitude}
+					\label{fig:platlong}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/cart2.pdf}
+					\captionof{figure}{Position equirectangulaire}
+					\label{fig:pequirect}
+				\end{minipage}
+			\end{figure}
+			\par
 
 		\subsection{Détection et Classification}
 		
@@ -139,6 +190,7 @@
 			
 		\subsection{Présentation vidéo et incrustation}
 		
+		L'interface présentée en partie \ref{sub:ihm} s'occupe
 		\begin{figure}[htb]
 			\centering
 			\begin{minipage}{.5\textwidth}
@@ -169,7 +221,7 @@
 				\label{fig:def3}
 			\end{minipage}
 		\end{figure}
-		\content[inline]{A faire}
+		\info[inline]{WIP}
 			
 		\subsection{Contrôle du robot}
 		
