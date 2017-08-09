@@ -1,13 +1,21 @@
 \chapter{Conception et développement}
+\label{ch:condev}
 
 	\section{Architecture du logiciel}
 
 		\subsection{Vision globale}
 			
-			D'un point de vue matériel, le projet est séparé en deux parties: la plateforme mobile, robot sur lesquels sont connectés les périphériques de capture, et le poste de contrôle, terminal de consultation des informations par l'opérateur humain. Cette architecture simple se retrouve dans le schéma \todoref.
-			\change[inline]{Ajouter schéma archi wifibot[camera,lidar,rpi] <-> poste contrôle[pc,hid,ecran]}
+			D'un point de vue matériel, le système est séparé en deux parties: la plateforme mobile, robot sur lequel sont connectés les périphériques de capture, et le poste de contrôle, terminal de consultation des informations par l'opérateur humain. Le schéma \autoref{fig:diag_gen} expose cette architecture en détail.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/diag_general.pdf}
+				\caption{Schéma de l'architecture générale du système}
+				\label{fig:diag_gen}
+			}
+			\end{figure}
 			\par
-			La plateforme mobile est un \emph{WiFiBot Lab V3}\cite{wifibot}, fourni par l'INSA Centre-Val-de-Loire, dont la carte de contrôle, munie d'un processeur x86, fonctionne sous \emph{Windows XP Embedded} et dispose d'un serveur connecté par WiFi à un routeur (fourni également) permettant de lui envoyer des commandes de contrôle des moteurs des roues. Dans un souci de conservation de l'existant et par simplicité de développement, nous avons choisi de contrôler les périphériques et de centraliser les transfers de données au travers d'un \emph{Raspberry Pi 3b}, qui possède une puissance de calcul raisonnable face à sa faible consommation et une carte WiFi intégré. Par ailleurs, le fait que micro-ordinateur fonctionne sous \emph{Linux} nous permet de conserver une continuité dans le choix des technologies logicielles à utiliser.
+			La plateforme mobile est un \emph{WiFiBot Lab V3}\cite{wifibot}, fourni par l'INSA Centre-Val-de-Loire, dont la carte de contrôle, munie d'un processeur x86, fonctionne sous Windows XP Embedded et dispose d'un serveur connecté par WiFi à un routeur (fourni également) permettant de lui envoyer des commandes de contrôle des moteurs des roues. Dans un souci de conservation de l'existant et par simplicité de développement, nous avons choisi de contrôler les périphériques et de centraliser les transfers de données des capteurs au travers d'un Raspberry Pi 3 modèle B, qui possède une puissance de calcul raisonnable face à sa faible consommation et une carte WiFi intégré. Par ailleurs, le fait que ce micro-ordinateur fonctionne sous Linux nous permet de conserver une continuité dans le choix des technologies logicielles à utiliser.
 			\par
 			Le poste de contrôle, connecté au même routeur que le WifiBot, est constitué d'un micro-ordinateur disposant d'un \gls{gpu} dédié (NVIDIA K620), d'un écran et de périphériques d'entrées standard (clavier, souris), permettant d'intéragir avec l'opérateur. Au vu de la faible puissance de calcul dont dispose la plateforme mobile, le choix a été fait de centraliser les traitements lourds sur ce poste.
 			\par
@@ -16,8 +24,6 @@
 				\item[l'Interface Homme-Machine], qui permet à l'opérateur de contrôler les mouvements de la plateforme mobile, démarrer les périphériques de capture et leurs chaînes de traitement, d'enregistrer une mission et de visionner le déroulement d'une mission enregistrée.
 				\item[le réseau de traitement de données], qui permet d'exploiter les données en sortie des périphériques de capture de manière à en tirer des informations pertinentes: la cartographie des lieux visités et les objets d'intérêt qui y sont présents.
 			\end{description}
-			Cette architecture se retrouve en \todoref, avec des éléments détaillant le fonctionnement de chaque partie.
-			\change[inline]{Ajouter schéma archi logiciel général}
 
 		\subsection{Réseau de traitement de données}
 
@@ -30,7 +36,7 @@
 			\change[inline]{Ajouter schéma archi ihm}
 			\content[inline]{A faire}
 
-	\section{Détails d'implémentation}
+	\section{Réalisations}
 	
 		\subsection{Transmission de la vidéo}
 		
@@ -55,13 +61,13 @@
 
 			\begin{center}
 				\scriptsize
-				\begin{tabularx}{\textwidth}[h]{|Y|Y||Y|}
+				\begin{tabular}[h]{|c|c||c|}
 					\toprule
 					\multicolumn{2}{|c||}{entête (24 octets)} & charge utile (variable) \\
 					\midrule
 					Identifiant protocole (8 octets) & taille image (16 octets) & données (variable)\\
 					\bottomrule
-				\end{tabularx}
+				\end{tabular}
 			\end{center}
 
 			Ces trames sont encapsulées dans des trames \gls{tcp} pour laisser le système s'occupper de la fragmentation et de l'ordonnacement, ce qui simplifie le traitement du côté réception et du côté traitement des données (pas de mise en file d'attente).
@@ -166,7 +172,7 @@
 				\right.\ $
 			\end{center}
 			
-			\begin{figure}[htb]
+			\begin{figure}[H]
 				\centering
 				\begin{minipage}{.5\textwidth}
 					\centering
@@ -185,13 +191,72 @@
 
 		\subsection{Détection et Classification}
 		
-			\lipsum[5]
-			\content[inline]{A faire}
+			Afin d'intégrer le module de détection et classification dans le système \gls{ros},
+			\info[inline]{WIP}
+			\par
+			
+			Comme vu en partie \todoref, les réseaux de neurones convolutifs prennent toujours une entrée de taille fixe.
+			Dans le cas de \emph{YOLO}, l'entrée doit être une image RGB de dimensions $ 418px \times 418px $ (ratio $1:1$), alors que les images en sortie de la caméra sont de dimension $ 1280px \times 720px$ (ratio $16:9$).
+			Le redimensionnement de l'image introduit alors des déformations importantes qui aggravent celles déjà induites par la projection equirectangulaire.
+			Les résultats d'une détection s'en retrouvent donc dégradés (\autoref{fig:pred_b}).
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_bad.jpg}
+				\caption{Détection sur image $360^{\circ}$}
+				\label{fig:pred_b}
+			}
+			\end{figure}
+			
+			La solution adoptée consiste à fragmenter l'image en plusieurs parties afin de minimiser ces déformations. Après quelques tests\footnote{Les résultats des tests et benchmarks furent pour la plupart subjectifs, car il n'existe pas encore de bases de données d'images $360^{\circ}$ annotées.}, il s'est avéré que la méthode la plus optimale en matière de précision des détections fût de couper l'image en trois parties (en vert sur la \autoref{fig:pred_c}) et d'en ignorer 20\% (en rouge) jugés trop déformés.
+			
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_cut.jpg}
+				\caption{Fragmentation d'une image en trois parties}
+				\label{fig:pred_c}
+			}
+			\end{figure}
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_f.jpg}
+				\caption{Détection sur image fragmentée.}
+				\label{fig:pred_f}
+			}
+			\end{figure}
+			
+			Bien que la qualité des détections soit devenue subjectivement acceptable (voir \autoref{fig:pred_f}), la vitesse d'opération s'en trouve amoindrie, car ce traitement multiplie par trois les opérations à effectuer pour chaque image de la caméra.
+			Après consultation de M. Daumand, il a été décidé de développer trois modes d'utilisation du module de détection: un mode simple, qui traite l'image en entier, un mode \og divisé \fg{}, qui permet d'utiliser la méthode précedemment définie
+			, et un mode \og fragmenté \fg{}, qui n'opère la détection que sur la partie de l'image que l'utilisateur est en train de visionner.
 			
 		\subsection{Présentation vidéo et incrustation}
 		
+		Dans les disciplines de détection et de classification, la présentation des résultats à un utilisateur se fait communément en encadrant les objets détectés avec des couleurs relatives à leurs classes (voir \autoref{fig:pred_f}) sur l'image d'origine. Cette methode simple induit dans notre cas une déformation des annotations lors de la visualisation du flux vidéo et réduit significativement l'expérience utilisateur\footnote{Une fois projetées sur une sphère, les annotations mettent en valeur la forme de projection et rendent l'image subjectivement "plate", empéchant ainsi toute forme d'immersion de l'utilisateur.} (\autoref{fig:pannot}).
+		\begin{figure}[H]
+		{
+			\centering
+			\includegraphics[width=.8\textwidth]{figures/pannot.png}
+			\caption{Déformation des annotations}
+			\label{fig:pannot}
+		}
+		\end{figure}
+		Au lieu d'être incrustés directement dans l'image, les résultats sont stockés dans une structure de données comportant:
+		\begin{itemize}[noitemsep]
+			\item Position centrale dans l'image (en coordonnées sphériques)
+			\item Largeur et hauteur dans l'image
+			\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement} (en coordonnées cartésiennes)
+			\item Largeur et hauteur dans l'espace\textsuperscript{\ref{ft_calc}}
+			\item Classe
+			\item Score de détection ($ 0 < score < 1 $)
+		\end{itemize}
+		Il est alors possible d'utiliser ces données pour des traitements ultérieurs.
+		\par
+		
+		
 		L'interface présentée en partie \ref{sub:ihm} s'occupe
-		\begin{figure}[htb]
+		\begin{figure}[H]
 			\centering
 			\begin{minipage}{.5\textwidth}
 				\centering
@@ -222,41 +287,61 @@
 			\end{minipage}
 		\end{figure}
 		\info[inline]{WIP}
+		
+		\subsection{Correlation Cartographie-Detection}
+		
+			\lipsum[2]
+			\content[inline]{A faire}
 			
 		\subsection{Contrôle du robot}
 		
-			\lipsum[1]
-			\content[inline]{A faire}
+			D'après le manuel d'utilisation du WiFibot Lab\cite{wifibot}, le robot est controllable grâce à un joystick au travers d'une application fournie dans le CD-ROM de support. Il est également possible de le contrôler au travers du protocole RS232\cite{rs232} encapsulé dans des trames \gls{udp}. L'envoi des commandes moteur s'effectue au travers de deux octets, contrôlant respectivement les roues gauches et droites. La répartition des informations dans chacun des octets est la suivante:
+			\begin{center}
+				\scriptsize
+				\begin{tabular}[h]{|c||c||c|c|c|c|c|c|}
+					\toprule
+					bit0 & bit1 & bit2 & bit3 & bit4 & bit5 & bit6 & bit7 \\
+					\midrule
+					\specialcell{Asservissement\\ 0=OFF, 1=ON} &
+					\specialcell{Sens\\ 0=Arrière, 1=Avant} &
+					\multicolumn{6}{c|}{Vitesse (0 à 60)} \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
+			Pour des raisons de simplification, nous n'avons utilisé que le mode asservi, le deuxième n'étant pas documenté dans la documentation officielle de notre version du robot.
+			Ces commandes sont envoyées par action de l'utilisateur, soit par des touches clavier, soit en actionnant le joystick virtuel présent en \todoref.
+			Les lois de contrôle sont relativement simples en raison de l'éloignement avec le sujet du stage et ne seront pas déteillées ici.
+			\par
+			En retour d'une commande, le robot envoie
+			\begin{center}
+				\scriptsize
+				\begin{tabular}[h]{|c||c||c|c|c|c|c|c|}
+					\toprule
+					bit0 & bit1 & bit2 & bit3 & bit4 & bit5 & bit6 & bit7 \\
+					\midrule
+					\specialcell{Asservissement\\ 0=OFF, 1=ON} &
+					\specialcell{Sens\\ 0=Arrière, 1=Avant} &
+					\multicolumn{6}{c|}{Vitesse (0 à 60)} \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
+			\info[inline]{WIP}
 			
 		\subsection{Modularité de l'IHM}
 		
 			\lipsum[2]
 			\content[inline]{A faire}
 			
-	\section{Méthodes de travail}
-
-		\subsection{Git-flow}
-		
-			\lipsum[3]
-			\content[inline]{A faire}
-			
-		\subsection{Emprunts agiles}
-		
-			\lipsum[4]
-			\content[inline]{A faire}
-			
-
 	\section{Pérennisation du projet}
 	
-		\subsection{Manuel utilisateur}
-		
+		\subsection{Manuel utilisateur et documentation}
+		\label{sub:manuel}
+
 			Le projet est destiné à être poursuivi lors de stages ultérieurs, c'est pourquoi il a été décidé de rédiger un manuel d'utilisation, autant à l'intention des développeurs que pour un utilisateur \og opérateur \fg{}. Il regroupe un manuel d'installation, un guide de résolution des problèmes, un manuel d'utilisation de l'interface homme-machine et un guide de développement, qui explique le fonctionnement du logiciel et propose des améliorations possibles.
 			\par
 			Ce manuel a été rédigé en Markdown \cite{markdown}, un langage de balisage léger permettant une mise en forme rapide du texte et l'inclusion d'images. Il est compilé sous la forme d'un site html statique par MkDocs\cite{mkdocs}, ce qui permet une mise en forme agréable, ainsi qu'une navigation simple et plus intuitive qu'un document \og classique \fg{}. Il est donc prêt à être hébergé sur un serveur web.
-			
-		\subsection{Documentation}
-		
-			\content[inline]{A faire}
+			\par
+			Une documentation exhaustive de la partie \gls{ihm} a été écrite
 			
 		\subsection{Installation automatique}
 		

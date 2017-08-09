@@ -26,9 +26,6 @@
 			}
 			\end{figure}
 
-			\improvement[inline]{Ajouter justification des technos employées}
-
-
 		\subsection{Exigences}
 
 			Le document de Spécification Technique du Besoin Logiciel développe le fonctionnement de la brique logicielle en trois fonctions principales détaillées dans la liste suivante, accompagnées de leurs descriptions:
@@ -48,6 +45,43 @@
 			
 			\improvement[inline]{Ajouter du contenu ?}
 
+	\section{Planification et Organisation}
+
+		\subsection{Définition des tâches}
+			
+			Le choix de la technologie à utiliser pour les tâches de détection et classification a été décidé tacitement face à la médiatisation récente des applications de l'apprentissage profond dans le traitement de l'image. Néanmoins, les nombreux choix au regard de la conception du produit logiciel, des fonctionnalités et de la constitution du livrable ont été pilotées par des réunion hebdomadaires avec notre tuteur de stage. Ces réunions ont permit la création d'un planning des tâches à réaliser sous la forme d'un diagramme de Gantt servant de référentiel à la conduite du projet. Ce planning peut être retrouvé en annexe \todoref.
+			\par
+			En raison de la nature expérimentale du projet, le stage s'est déroulé en trois parties. Une première étape, préliminaire au développement de la solution, a consisté à effectuer des études de faisabilité de différents frameworks de réseaux neuronaux convolutifs et à dresser un comparatif des caméras $ 360^{\circ} $ afin d'en choisir une a commander. Durant cette étape ont été réalisés des ébauches du programme qui ont permis d'évaluer qualitativement diverses bibliothèques d'apprentissage profond sur des critères tels que la précision des résultats, la vitesse de traitement et la facilité d'intégration.
+			\par
+			La complétion de cette étape à laissé place à la réalisation de la brique logicielle de détection. La conception des deux briques logicielles -- la détection et la cartographie -- a été réalisée séparément du reste du système par souci de distinguer clairement les deux sujets de stage.
+			\par
+			Une fois le matériel reçu s'est engagée la phase de réalisation du système final, où les deux stages se sont rejoints dans la même application. Au sein de cette phase se sont opérés la conception du système, son développement et son intégration. Ces étapes sont décrites en détail dans le \autoref{ch:condev}.
+			
+			
+		\subsection{Méthodes de travail}
+
+			Dans le cadre du développement en équipe du système, il a été convenu d'utiliser le système de gestion de versions \emph{git}, de manière à coordonner le développement concurrent et la fixation de versions stables. Pour organiser les dépots de code source, nous avons choisi d'adopter la methodologie \emph{Git-Flow}, qui propose un modèle de ramification spécifique décrit ci-dessous. Un document de référence a été rédigé concernant les politiques de nommage des branches et des commandes à utiliser dans le manuel développeur décrit dans la \autoref{sub:manuel}.
+			Cinq types de branches ont été utilisées:
+			\begin{description}[noitemsep, before={\setcounter{descriptcount}{0}},font=\bfseries\stepcounter{descriptcount}\thedescriptcount.~]
+				\item[\emph{develop}:] contient la version du logiciel en cours de développement .
+				\item[\emph{release-<version>}:] ensemble de branches qui servent à préparer une version stable qui ne changera plus une fois validée. Une fois la \emph{release} terminée, on la fusionne avec les branches \emph{master} et \emph{develop}.
+				\item[\emph{master}:] correspond à la dernière branche \emph{release-x.x} validée.
+				\item[\emph{hotfix-<raison>}:] ensemble de branches sur lesquelles on développe des réparations diverses en amont d'une validation de \emph{release}.
+				\item[\emph{feature-<nom>}:] ensemble de branches sur lesquelles on développe les fonctionnalités majeures du logiciel pendant la phase de développement. Elles sont destinées à être fusionnées avec \emph{develop}.
+			\end{description}
+			Les ramifications ressemblent alors au graphique \autoref{fig:branches}.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[page=1,width=.6\textwidth]{figures/branches.pdf}
+				\caption{Réseau d'exemple}
+				\label{fig:branches}
+			}
+			\end{figure}
+			
+			\par
+			L'autonomie dont nous avons profité durant la phase de développement nous a permis d'emprunter des techniques aux méthodes agiles telles que la programmation en binôme (\emph{Pair Programming}) pour les composant cruciaux du système et le \emph{Planning Poker} pour la priorisation des tâches.
+			
 	\section{Etat de l'art}
 
 		\subsection{Détection d'objets et apprentissage automatique}
@@ -81,7 +115,8 @@
 			\end{figure}
 			
 			
-			\info[inline]{WIP}
+			\improvement[inline]{Finir description RCNN}
+			\improvement[inline]{Citer différents frameworks+réseaux + darknet-yolo}
 
 		\subsection{Vidéo sphérique}
 			% de 1 à 36 objectifs
@@ -105,15 +140,3 @@
 			\end{itemize}
 			
 			Notre choix s'est d'abord porté sur le produit Insta\oldstylenums{360} 4K\cite{insta360}, qui possède un système d'assemblage en temps réel intégré et une très bonne qualité d'image. Cependant, le produit n'étant pas disponible au moment de l'achat, nous avons dûs nous reporter sur la caméra Theta S de Ricoh\cite{ricohthetas}, possédant une qualité d'image moindre et aucun moyen natif d'assemblage en temps réel sous systèmes linux. Ce dernier point s'est avéré crucial dans l'organisation du travail, car il a nécessité une charge de travail importante, détaillée en \ref{sub:transfo}.
-
-	\section{Problématiques soulevées}
-
-		\subsection{Détection sur une image déformée}
-
-			\content[inline]{A faire}
-
-		\subsection{Visualisation des résultats}
-
-			\content[inline]{A faire}
-		
-			
