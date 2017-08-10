@@ -1,47 +1,67 @@
 \chapter{Conception et développement}
+\label{ch:condev}
 
 	\section{Architecture du logiciel}
 
 		\subsection{Vision globale}
 			
-			D'un point de vue matériel, le projet est séparé en deux parties: la plateforme mobile, robot sur lesquels sont connectés les périphériques de capture, et le poste de contrôle, terminal de consultation des informations par l'opérateur humain. Cette architecture simple se retrouve dans le schéma \todoref.
-			\change[inline]{Ajouter schéma archi wifibot[camera,lidar,rpi] <-> poste contrôle[pc,hid,ecran]}
+			D'un point de vue matériel, le système est séparé en deux parties: la plateforme mobile, robot sur lequel sont connectés les périphériques de capture, et le poste de contrôle, terminal de consultation des informations par l'opérateur humain. Le schéma \autoref{fig:diag_gen} expose cette architecture en détail.
+			\begin{figure}[h]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/diag_general.pdf}
+				\caption{Schéma de l'architecture générale du système}
+				\label{fig:diag_gen}
+			}
+			\end{figure}
 			\par
-			La plateforme mobile est un \emph{WiFiBot Lab V3}\cite{wifibot}, fourni par l'INSA Centre-Val-de-Loire, dont la carte de contrôle, munie d'un processeur x86, fonctionne sous \emph{Windows XP Embedded} et dispose d'un serveur connecté par WiFi à un routeur (fourni également) permettant de lui envoyer des commandes de contrôle des moteurs des roues. Dans un souci de conservation de l'existant et par simplicité de développement, nous avons choisi de contrôler les périphériques et de centraliser les transfers de données au travers d'un \emph{Raspberry Pi 3b}, qui possède une puissance de calcul raisonnable face à sa faible consommation et une carte WiFi intégré. Par ailleurs, le fait que micro-ordinateur fonctionne sous \emph{Linux} nous permet de conserver une continuité dans le choix des technologies logicielles à utiliser.
+			La plateforme mobile est un \emph{WiFiBot Lab V2}\cite{wifibot}, fourni par l'INSA Centre-Val-de-Loire, dont la carte de contrôle, munie d'un processeur x86, fonctionne sous Windows XP Embedded et dispose d'un serveur connecté par WiFi à un routeur (fourni également) permettant de lui envoyer des commandes de contrôle des moteurs des roues. Dans un souci de conservation de l'existant et par simplicité de développement, nous avons choisi de contrôler les périphériques et de centraliser les transfers de données des capteurs au travers d'un Raspberry Pi 3 modèle B, qui possède une puissance de calcul raisonnable face à sa faible consommation et une carte WiFi intégrée. Par ailleurs, le fait que ce micro-ordinateur fonctionne sous Linux nous permet de conserver une continuité dans le choix des technologies logicielles à utiliser.
 			\par
-			Le poste de contrôle, connecté au même routeur que le WifiBot, est constitué d'un micro-ordinateur disposant d'un \gls{gpu} dédié (NVIDIA K620), d'un écran et de périphériques d'entrées standard (clavier, souris), permettant d'intéragir avec l'opérateur. Au vu de la faible puissance de calcul dont dispose la plateforme mobile, le choix a été fait de centraliser les traitements lourds sur ce poste.
+			Le poste de contrôle, connecté au même routeur que le WifiBot, est constitué d'un micro-ordinateur disposant d'un \gls{gpu} dédié (NVIDIA K620), d'un écran et de périphériques d'entrées standards (clavier, souris), permettant d'intéragir avec l'opérateur. Au vu de la faible puissance de calcul dont dispose la plateforme mobile, le choix a été fait de centraliser les traitements lourds sur ce poste.
 			\par
 			Le logiciel se scinde en deux parties bien distinctes:
 			\begin{description}[noitemsep]
 				\item[l'Interface Homme-Machine], qui permet à l'opérateur de contrôler les mouvements de la plateforme mobile, démarrer les périphériques de capture et leurs chaînes de traitement, d'enregistrer une mission et de visionner le déroulement d'une mission enregistrée.
 				\item[le réseau de traitement de données], qui permet d'exploiter les données en sortie des périphériques de capture de manière à en tirer des informations pertinentes: la cartographie des lieux visités et les objets d'intérêt qui y sont présents.
 			\end{description}
-			Cette architecture se retrouve en \todoref, avec des éléments détaillant le fonctionnement de chaque partie.
-			\change[inline]{Ajouter schéma archi logiciel général}
 
 		\subsection{Réseau de traitement de données}
 
+			Devant l'ampleur des traitements de données à effectuer au sein du système (nuages de points du \gls{lidar}, vidéo sphérique, odométrie du robot \ldots), le besoin s'est fait ressentir de mettre en place une architecture permettant une gestion indépendante des différents modules de calcul. Dans cette optique, il convient d'adopter une solution permettant de les exécuter de manière concurrente et d'employer des moyens de communication simples. Nous avons donc choisi d'utiliser le framework \gls{ros}.
+			\par
+			\gls{ros}, pour \emph{Robot Operating System}, est une plateforme de développement logicielle pour linux destinée aux applications robotiques. Elle prend la forme d'un ensemble d'outils et de bibliothèques (C++ et Python) offrant de nombreuses fonctionnalités telles que la transmission de messages entre processus, le rejeu de scénarios et la gestion de paquets installés. \gls{ros} introduit le concept de n\oe{}uds, processus intercommunicants qui constituent les mailles d'un réseau. Ce dernier est géré par un processus maître (\emph{ROS Master}), qui s'occupe de mettre en relation des n\oe{}uds au travers des \emph{topics}. Les \emph{topics} peuvent être vus comme des bus nommés au travers desquels les noeuds s'envoient des messages.
+			Il permettent de découpler l'émission de données de leur réception, en utilisant un système de publication/souscription unidirectionnel. La communication ne s'effectue plus par la connaissance des interlocuteurs, mais par l'intérêt porté à une donnée précise.
+			Les n\oe{}uds disposant d'une information la publient sur un \emph{topic} particulier, et ceux qui ont besoin de cette information s'y inscrivent. Ce système, basé sur le protocole \emph{XMLRPC}, permet une abstraction complète de la communication entre machines, ce qui simplifie grandement la conception d'une architecture distribuée sur plusieurs postes informatiques, comme l'est notre projet.
+			\par
+			% Image arch ros avec simplification lisa
+			% explication SIMPLE de chaque noeud que j'utilise
+			
+			
 			\change[inline]{Ajouter schéma réseau ros}
+			% ROS - intro, desc
+			% Schéma réseau, explications
 			\content[inline]{A faire}
 			
 		\subsection{Interface Homme-Machine}
 		\label{sub:ihm}
 
 			\change[inline]{Ajouter schéma archi ihm}
+			% Qt5 - intro, desc
+			% Schéma archi, explications
 			\content[inline]{A faire}
 
-	\section{Détails d'implémentation}
+	\section{Traitement de l'image et réseau de neurones}
 	
 		\subsection{Transmission de la vidéo}
 		
-			La caméra Ricoh Theta S comporte une carte WiFi, ce qui permet, pour une utilisation \og normale \fg{} (avec l'application Android fournisseur) de s'y connecter avec un téléphone fonctionnant sous Android, afin d'y transférer les données de la caméra. Ces données peuvent prendre la forme de photos ou de vidéos, préalablement enregistrées sur la mémoire interne de la caméra et donc récupérées en différé, ou d'un mode spécial, nommé \emph{live}, qui permet de transmettre un flux vidéo continu correspondant à la capture des objectifs de la caméra en temps réel. Ce mode permet de transmettre un aperçu au téléphone avant de prendre une photo, uniquement supporté par l'application Android du fabricant. Devant la demande croissante du public d'utiliser ce mode de \og livestream \fg{}, les développeurs ont choisi de le rendre disponible sur pc, au travers d'un pilote matériel permettant aux OS \emph{Windows} et \emph{Mac OS} de considérer la caméra, alors branchée à l'ordinateur par \gls{usb}, comme une webcam, permettant ainsi la plupart des programmes d'exploiter ce flux vidéo. Ce pilote se charge de communiquer avec le bon protocole les commandes utilisateurs à la caméra et de transformer le flux vidéo dans un format exploitable. Après analyse du pilote windows, il a été découvert (car non exprimé dans la documentation du produit) qu'il utilise la bibliothèque \emph{libUVC}, et donc que la communication avec la caméra est effectuée au travers du protocole \gls{uvc}. La caméra étant sur la plateforme mobile disposant d'un \emph{Raspberry Pi 3b}, il a été développé un noeud \gls{ros} permettant de lui envoyer des commandes, d'acquérir le flux vidéo direct et de l'envoyer sur le poste de contrôle.
+			La caméra Ricoh Theta S comporte une carte WiFi, ce qui permet, pour une utilisation \og normale \fg{} (avec l'application Android fournisseur) de s'y connecter avec un téléphone fonctionnant sous Android, afin d'y transférer les données de la caméra. Ces données peuvent prendre la forme de photos ou de vidéos, préalablement enregistrées sur la mémoire interne de la caméra et donc récupérées en différé. Un mode spécial, nommé \emph{live}, transmet un flux vidéo continu correspondant à la capture des objectifs de la caméra en temps réel. Ce mode permet d'envoyer un aperçu au téléphone avant de prendre une photo, et est uniquement supporté par l'application Android du fabricant. Devant la demande croissante du public d'utiliser ce mode de \og livestream \fg{}, les développeurs ont choisi de le rendre disponible sur PC, au travers d'un pilote matériel permettant aux OS \emph{Windows} et \emph{Mac OS} de considérer la caméra, alors branchée à l'ordinateur par \gls{usb}, comme une webcam, permettant ainsi à la plupart des programmes d'exploiter ce flux vidéo. Ce pilote se charge de communiquer avec le bon protocole les commandes utilisateur à la caméra et de transformer le flux vidéo dans un format exploitable. Après analyse du pilote \emph{Windows}, il a été découvert (car non exprimé dans la documentation du produit) qu'il utilise la bibliothèque \emph{libUVC}, et donc que la communication avec la caméra est effectuée au travers du protocole \gls{uvc}. La caméra étant sur la plateforme mobile disposant d'un \emph{Raspberry Pi 3b}, un noeud \gls{ros} permettant de lui envoyer des commandes, d'acquérir le flux vidéo direct et de l'envoyer sur le poste de contrôle a été développé.
 			\par
 			Une problématique arrivée rapidement est celle de la transmission sur le WiFi.
 			La Raspberry Pi dispose d'une carte WiFi qui ne supporte que la norme 802.11g, et ne peut donc transférer des données qu'au débit réel maximal de 25 Mb/s.
 			Après une analyse de paquet en cas réel, la bande passante disponible pour le flux vidéo n'est que de 17,6 Mb/s, soit 2,2 Mo/s.
-			Une image \gls{jpeg} en sortie de la caméra pèse en moyenne 400ko, et la caméra opère à 15 images/s, ce qui nécessite un débit de 6M/s.
+			Une image \gls{jpeg} en sortie de la caméra pèse en moyenne 400ko, et la caméra opère à 15 images/s, ce qui nécessite un débit de 6Mo/s.
 			La Raspberri Pi dispose d'un \gls{gpu} \emph{VideoCore IV}\cite{videocore}, servant en priorité à encoder et décoder des vidéos (par exemple, pour lire un flux vidéo en haute qualité depuis internet).
-			Il est donc possible d'utiliser la bibliothèque \emph{OpenMAX} pour encoder une vidéo, qui devrait donc peser moins qu'une séquence d'images décorrélées.
+			Il est donc possible d'utiliser la bibliothèque \emph{OpenMAX} pour encoder une vidéo, qui devrait donc peser moins qu'une séquence d'images \gls{mjpeg}.
 			Cependant, après de nombreux éssais d'envoi de flux converti (au format h264, le format le plus optimisé pour cette puce graphique), il s'est avéré que l'encodage entraîne un surplus de traitement au niveau du processeur de la Raspberry, qui entraîne l'introduction d'une latence importante entre la capture d'une image et sa visualisation sur le poste opérateur.
 			Il a donc été décidé de réduire la vitesse du flux de la caméra à 5 images/s, afin de ne nécessiter que 2Mo/s de bande passante.
 			%1 jpeg 1280x768 = 400ko
@@ -55,13 +75,13 @@
 
 			\begin{center}
 				\scriptsize
-				\begin{tabularx}{\textwidth}[h]{|Y|Y||Y|}
+				\begin{tabular}[h]{|c|c||c|}
 					\toprule
 					\multicolumn{2}{|c||}{entête (24 octets)} & charge utile (variable) \\
 					\midrule
 					Identifiant protocole (8 octets) & taille image (16 octets) & données (variable)\\
 					\bottomrule
-				\end{tabularx}
+				\end{tabular}
 			\end{center}
 
 			Ces trames sont encapsulées dans des trames \gls{tcp} pour laisser le système s'occupper de la fragmentation et de l'ordonnacement, ce qui simplifie le traitement du côté réception et du côté traitement des données (pas de mise en file d'attente).
@@ -70,7 +90,7 @@
 		\label{sub:transfo}
 		
 			En sortie de la caméra, l'image correspond aux photos prises par les deux objectifs, chacun ayant un angle de prise de vue de $190^{\circ}$, horizontalement et verticalement, et chacun étant de type \gls{fisheye} circulaire. Un exemple d'image non traitée est représenté \autoref{fig:rawcapture}. Le fait de disposer de deux photos \gls{fisheye} qui couvrent l'ensemble du point de vue à la position de la caméra s'appelle couramment \emph{Dual Fisheye}. On peut parler de représentation sphérique d'un point de vue, l'angle de champ étant de $360^{\circ}\times180^{\circ}$. Les caractéristiques spatiales visibles observent un niveau de déformation proportionnel à leur éloignement du centre de l'objectif. À défaut de traitement, la détection et la classification des objects contenus dans la scène présentent des imprécisions qui rendent de tels résultats inexploitables.
-			\begin{figure}[h]
+			\begin{figure}[H]
 			{
 				\centering
 				\includegraphics[width=1\textwidth]{figures/capture.jpg}
@@ -82,7 +102,7 @@
 			Comme évoqué dans la section précédente, le pilote fourni par le fabricant transforme cette image en appliquant une projection spatiale sur chacun de ses pixels de manière à obtenir une couverture complète du point de vue en projection équirectangulaire. Cette méthode permet de voir l'intégralité de la surface d'une sphère sur un plan. Les figures suivantes visent à illustrer cette opération.
 			\par
 			On considère la scène \autoref{fig:cage}, où notre point de vue correspond à la sphère rouge. Notre scène comporte donc une cage dont les faces ont des couleurs différentes et des numéros permettant de mettre les caractéristiques spatiales en valeur.
-			\begin{figure}[h]
+			\begin{figure}[H]
 			{
 				\centering
 				\includegraphics[width=0.6\textwidth]{figures/cage.png}
@@ -101,12 +121,12 @@
 			}
 			\end{figure}
 			\par
-			On crée alors un rectangle où chaque pixel trouve un correspondant dans ces disques, et on obtient une projection equirectangulaire de l'espace sphérique d'origine. (\autoref{fig:equirect}).
+			On crée alors un rectangle où chaque pixel trouve un correspondant dans ces disques, et on obtient une projection équirectangulaire de l'espace sphérique d'origine. (\autoref{fig:equirect}).
 			\begin{figure}[H]
 			{
 				\centering
 				\includegraphics[width=1\textwidth]{figures/equirect.png}
-				\caption{Projection equirectangulaire}
+				\caption{Projection équirectangulaire}
 				\label{fig:equirect}
 			}
 			\end{figure}
@@ -156,7 +176,7 @@
 				$ latitude = \tan^{-1}_{2}\left(y_{1}, x_{1}\right) $ \newline
 				$ longitude = \tan^{-1}_{2}\left(z_{1}, \sqrt{x_{1}^2+y_{1}^2}\right) $ \newline
 			\end{center}
-			Finalement, on projette ces coordonnées depuis le plan sphérique sur un plan equirectangulaire:
+			Finalement, on projette ces coordonnées depuis le plan sphérique sur un plan équirectangulaire:
 			\begin{center}
 				$P''(x_{2},y_{2}): \left\{
 				\begin{array}{ll}
@@ -165,8 +185,8 @@
 				\end{array}
 				\right.\ $ \newline \newline
 			\end{center}
-		
-			\begin{figure}[htb]
+			
+			\begin{figure}[H]
 				\centering
 				\begin{minipage}{.5\textwidth}
 					\centering
@@ -177,7 +197,7 @@
 				\begin{minipage}{.5\textwidth}
 					\centering
 					\includegraphics[width=0.95\linewidth]{figures/cart2.pdf}
-					\captionof{figure}{Position equirectangulaire}
+					\captionof{figure}{Position équirectangulaire}
 					\label{fig:pequirect}
 				\end{minipage}
 			\end{figure}
@@ -185,78 +205,146 @@
 			
 		\subsection{Détection et Classification}
 		
-			\content[inline]{A faire}
+			Afin d'intégrer le module de détection et classification dans le système \gls{ros}, une \gls{api} a été développée afin de couvrir les fonctions principales du framework \emph{Darknet}, ainsi qu'un n\oe{}ud \gls{ros} l'utilisant. Ceci a été possible grâce à la license de ce framework, qui le livre au domaine public et par ce fait libère son code de toute contrainte légale. Le n\oe{}ud \gls{ros}, appelé \emph{robot\_detection} permet alors de faire le lien entre les données du réseau \gls{ros} et celles de \emph{Darknet}, en convertissant les images et les résultats aux formats attendus par chaque acteur du système.
+			\par
+			Comme vu en \autoref{sub:neural}, les réseaux de neurones convolutifs prennent toujours une entrée de taille fixe.
+			Dans le cas de \emph{YOLO}, l'entrée doit être une image RGB de dimensions $ 448px \times 448px $ (ratio $1:1$), alors que les images en sortie de la caméra sont de dimension $ 1280px \times 720px$ (ratio $16:9$).
+			Le redimensionnement de l'image introduit alors des déformations importantes qui aggravent celles déjà induites par la projection équirectangulaire.
+			Les résultats d'une détection s'en retrouvent donc dégradés (\autoref{fig:pred_b}).
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_bad.jpg}
+				\caption{Détection sur image $360^{\circ}$}
+				\label{fig:pred_b}
+			}
+			\end{figure}
 			
+			La solution adoptée consiste à fragmenter l'image en plusieurs parties afin de minimiser ces déformations. Après quelques tests\footnote{Les résultats des tests et benchmarks furent pour la plupart subjectifs, car il n'existe pas encore de bases de données d'images $360^{\circ}$ annotées.}, on détermine que la méthode la plus optimale en matière de précision des détections est de couper l'image en trois parties (en vert sur la \autoref{fig:pred_c}) et d'en ignorer 20\% (en rouge) jugés trop déformés.
+			
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_cut.jpg}
+				\caption{Fragmentation d'une image en trois parties}
+				\label{fig:pred_c}
+			}
+			\end{figure}
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/predictions_f.jpg}
+				\caption{Détection sur image fragmentée.}
+				\label{fig:pred_f}
+			}
+			\end{figure}
+			
+			Bien que la qualité des détections soit devenue subjectivement acceptable (voir \autoref{fig:pred_f}), la vitesse d'opération s'en trouve amoindrie, car ce traitement multiplie par trois les opérations à effectuer pour chaque image de la caméra.
+			Après consultation de M. Daumand, il a été décidé de développer trois modes d'utilisation du module de détection: un mode simple, qui traite l'image en entier, un mode \og divisé \fg{}, qui permet d'utiliser la méthode précedemment définie
+			, et un mode \og fragmenté \fg{}, qui n'opère la détection que sur la partie de l'image que l'utilisateur est en train de visionner.
+
+
+	\section{Visualisation et interaction utilisateur}
+				
 		\subsection{Présentation vidéo et incrustation}
+			
+			L'un des buts principaux de l'\gls{ihm} est de présenter les informations obtenues par le réseau de traitement de données dans un format agréable et cohérent. En \autoref{sub:transfo}, nous obtenons une image en projection équirectangulaire qui représente l'ensemble du champ de vision de la caméra, c'est à dire une sphère. Pour afficher une reconstruction réaliste de ce point de vue, il est nécessaire de reconstituer cette sphère, et de laisser l'utilisateur naviguer à l'intérieur comme s'il tournait la tête afin d'observer une partie du panorama.
+			\par
+			Pour ce faire, nous avons utilisé la technique de l'\emph{UV Mapping}, qui consiste à faire correspondre les sommets d'un polyèdre à des coordonnées dans une image. L'image est alors \og plaquée \fg{} sur le solide. Cette opération revient à effectuer l'inverse de la dernière projection vue en \autoref{sub:transfo}: équirectangulaire vers l'espace réel de l'objectif. Les figures \ref{fig:def0} à \ref{fig:def3} permettent de se représenter instinctivement la manière dont est effectuée cette transformation.
+			
+			\begin{figure}[H]
+				\centering
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def0.png}
+					\captionof{figure}{Image équirectangulaire}
+					\label{fig:def0}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def1.png}
+					\captionof{figure}{Scène tridimensionnelle}
+					\label{fig:def1}
+				\end{minipage}
+				
+			\end{figure}
+			\begin{figure}[H]
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def2.png}
+					\captionof{figure}{Vue de l'esprit \og déformation du plan \fg{}}
+					\label{fig:def2}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def3.png}
+					\captionof{figure}{Sphere mapping}
+					\label{fig:def3}
+				\end{minipage}
+			\end{figure}
+			
+			On \og plaque \fg{} alors la vidéo sphérique sur une sphère dans une scène tridimentionelle, puis on place le point de vue de l'utilisateur au centre de cette sphère. En contrôlant l'orientation du point de vue, l'utilisateur est alors capable de visualiser l'ensemble de la vidéo comme s'il se trouvait à la place de la caméra.
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/cathedrale_eq.jpg}
+				\caption{Photo sphérique de la cathédrale de bourges}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/cathedral_ihm.png}
+				\caption{Vue dans l'\gls{ihm}}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			
+			\par
+			Dans les disciplines de détection et de classification, la présentation des résultats à un utilisateur se fait communément en encadrant les objets détectés avec des couleurs relatives à leurs classes (voir \autoref{fig:pred_f}) sur l'image d'origine. Cette méthode simple induit dans notre cas une déformation des annotations lors de la visualisation du flux vidéo et réduit significativement l'expérience utilisateur\footnote{Une fois projetées sur une sphère, les annotations mettent en valeur la forme de projection et rendent l'image subjectivement "plate", empéchant ainsi toute forme d'immersion de l'utilisateur.} (\autoref{fig:pannot}).
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/pannot.png}
+				\caption{Déformation des annotations}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			Au lieu d'être incrustés directement dans l'image, les résultats sont stockés dans une structure de données comportant:
+			\begin{itemize}[noitemsep]
+				\item Position centrale dans l'image (en coordonnées sphériques)
+				\item Largeur et hauteur dans l'image
+				\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement} (en coordonnées cartésiennes)
+				\item Largeur et hauteur dans l'espace\textsuperscript{\ref{ft_calc}}
+				\item Classe
+				\item Score de détection ($ 0 < score < 1 $)
+			\end{itemize}
+			\change[inline]{Ajouter même figure et explication de comment j'ai fait}
+			
+			Il est alors possible d'utiliser cette structure d'encapsulation des résultats pour des traitements ultérieurs, par exemple retrouver ces objets sur la cartographie des lieux.
 		
-		L'interface présentée en partie \ref{sub:ihm} s'occupe
-		\begin{figure}[htb]
-			\centering
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def0.png}
-				\captionof{figure}{Image equirectangulaire}
-				\label{fig:def0}
-			\end{minipage}%
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def1.png}
-				\captionof{figure}{Texture mapping }
-				\label{fig:def1}
-			\end{minipage}
-			
-			\vspace{0.5cm}
-			
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def2.png}
-				\captionof{figure}{Déformation}
-				\label{fig:def2}
-			\end{minipage}%
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def3.png}
-				\captionof{figure}{\emph{Sphere mapping}}
-				\label{fig:def3}
-			\end{minipage}
-		\end{figure}
-		\info[inline]{WIP}
+		\subsection{Correlation Cartographie-Detection}
+		\label{sub:corr}
+		
+		
+			\content[inline]{A faire}
 			
 		\subsection{Contrôle du robot}
 		
-			\content[inline]{A faire}
-			
-		\subsection{Modularité de l'IHM}
-		
-			\content[inline]{A faire}
-			
-	\section{Méthodes de travail}
-
-		\subsection{Git-flow}
-		
-			\content[inline]{A faire}
-			
-		\subsection{Emprunts agiles}
-		
-			\content[inline]{A faire}
-			
-
-	\section{Pérennisation du projet}
-	
-		\subsection{Manuel utilisateur}
-		
-			Le projet est destiné à être poursuivi lors de stages ultérieurs, c'est pourquoi il a été décidé de rédiger un manuel d'utilisation, autant à l'intention des développeurs que pour un utilisateur \og opérateur \fg{}. Il regroupe un manuel d'installation, un guide de résolution des problèmes, un manuel d'utilisation de l'interface homme-machine et un guide de développement, qui explique le fonctionnement du logiciel et propose des améliorations possibles.
-			\par
-			Ce manuel a été rédigé en Markdown \cite{markdown}, un langage de balisage léger permettant une mise en forme rapide du texte et l'inclusion d'images. Il est compilé sous la forme d'un site html statique par MkDocs\cite{mkdocs}, ce qui permet une mise en forme agréable, ainsi qu'une navigation simple et plus intuitive qu'un document \og classique \fg{}. Il est donc prêt à être hébergé sur un serveur web.
-			
-		\subsection{Documentation}
-		
-			\content[inline]{A faire}
-			
-		\subsection{Installation automatique}
-		
-			\content[inline]{A faire}
-				
-		\subsection{Communication interne}
-		
-			\content[inline]{A faire}
+			D'après le manuel d'utilisation du WiFibot Lab\cite{wifibot}, le robot est contrôlable grâce à un joystick au travers d'une application fournie dans le CD-ROM de support. Il est également possible de le contrôler au travers du protocole RS232\cite{rs232} encapsulé dans des trames \gls{udp}. L'envoi des commandes moteur s'effectue au travers de deux octets, contrôlant respectivement les roues gauches et droites. La répartition des informations dans chacun des octets est la suivante:
+			\begin{center}
+				\scriptsize
+				\begin{tabular}[h]{|c||c||c|c|c|c|c|c|}
+					\toprule
+					bit0 & bit1 & bit2 & bit3 & bit4 & bit5 & bit6 & bit7 \\
+					\midrule
+					\specialcell{Asservissement\\ 0=OFF, 1=ON} &
+					\specialcell{Sens\\ 0=Arrière, 1=Avant} &
+					\multicolumn{6}{c|}{Vitesse (0 à 60)} \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
+			Pour des raisons de simplification, nous n'avons utilisé que le mode asservi, le deuxième n'étant pas documenté dans la documentation officielle de notre version du robot.
+			Ces commandes sont envoyées par action de l'utilisateur, soit par des touches clavier, soit en actionnant le joystick virtuel présent en \todoref.
+			Les lois de contrôle sont relativement simples en raison de l'éloignement avec le sujet du stage et ne seront pas détaillées ici.
