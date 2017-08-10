@@ -27,6 +27,7 @@
 
 		\subsection{Réseau de traitement de données}
 
+			
 			\change[inline]{Ajouter schéma réseau ros}
 			\content[inline]{A faire}
 			
@@ -191,12 +192,10 @@
 
 		\subsection{Détection et Classification}
 		
-			Afin d'intégrer le module de détection et classification dans le système \gls{ros},
-			\info[inline]{WIP}
+			Afin d'intégrer le module de détection et classification dans le système \gls{ros}, une \gls{api} a été développée afin de couvrir les fonctions principales du framework \emph{Darknet}, ainsi qu'un noeud \gls{ros} l'utilisant. Ceci a été possible grâce à la license de ce framework, qui le livre au domaine public et par ce fait libère son code de toute contrainte légale. Le noeud \gls{ros}, appelé \emph{robot\_detection} permet alors de faire le lien entre les données du réseau \gls{ros} et celles de \emph{Darknet}, en convertissant les images et les résultats aux formats attendus par chaque acteur du système.
 			\par
-			
-			Comme vu en partie \todoref, les réseaux de neurones convolutifs prennent toujours une entrée de taille fixe.
-			Dans le cas de \emph{YOLO}, l'entrée doit être une image RGB de dimensions $ 418px \times 418px $ (ratio $1:1$), alors que les images en sortie de la caméra sont de dimension $ 1280px \times 720px$ (ratio $16:9$).
+			Comme vu en \autoref{sub:neural}, les réseaux de neurones convolutifs prennent toujours une entrée de taille fixe.
+			Dans le cas de \emph{YOLO}, l'entrée doit être une image RGB de dimensions $ 448px \times 448px $ (ratio $1:1$), alors que les images en sortie de la caméra sont de dimension $ 1280px \times 720px$ (ratio $16:9$).
 			Le redimensionnement de l'image introduit alors des déformations importantes qui aggravent celles déjà induites par la projection equirectangulaire.
 			Les résultats d'une détection s'en retrouvent donc dégradés (\autoref{fig:pred_b}).
 			\begin{figure}[H]
@@ -232,65 +231,84 @@
 			, et un mode \og fragmenté \fg{}, qui n'opère la détection que sur la partie de l'image que l'utilisateur est en train de visionner.
 			
 		\subsection{Présentation vidéo et incrustation}
-		
-		Dans les disciplines de détection et de classification, la présentation des résultats à un utilisateur se fait communément en encadrant les objets détectés avec des couleurs relatives à leurs classes (voir \autoref{fig:pred_f}) sur l'image d'origine. Cette methode simple induit dans notre cas une déformation des annotations lors de la visualisation du flux vidéo et réduit significativement l'expérience utilisateur\footnote{Une fois projetées sur une sphère, les annotations mettent en valeur la forme de projection et rendent l'image subjectivement "plate", empéchant ainsi toute forme d'immersion de l'utilisateur.} (\autoref{fig:pannot}).
-		\begin{figure}[H]
-		{
-			\centering
-			\includegraphics[width=.8\textwidth]{figures/pannot.png}
-			\caption{Déformation des annotations}
-			\label{fig:pannot}
-		}
-		\end{figure}
-		Au lieu d'être incrustés directement dans l'image, les résultats sont stockés dans une structure de données comportant:
-		\begin{itemize}[noitemsep]
-			\item Position centrale dans l'image (en coordonnées sphériques)
-			\item Largeur et hauteur dans l'image
-			\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement} (en coordonnées cartésiennes)
-			\item Largeur et hauteur dans l'espace\textsuperscript{\ref{ft_calc}}
-			\item Classe
-			\item Score de détection ($ 0 < score < 1 $)
-		\end{itemize}
-		Il est alors possible d'utiliser ces données pour des traitements ultérieurs.
-		\par
-		
-		
-		L'interface présentée en partie \ref{sub:ihm} s'occupe
-		\begin{figure}[H]
-			\centering
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def0.png}
-				\captionof{figure}{Image equirectangulaire}
-				\label{fig:def0}
-			\end{minipage}%
-			\begin{minipage}{.5\textwidth}
-				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def1.png}
-				\captionof{figure}{Texture mapping }
-				\label{fig:def1}
-			\end{minipage}
 			
-			\vspace{0.5cm}
+			L'un des buts principaux de l'\gls{ihm} est de présenter les informations obtenues par le réseau de traitement de données dans un format agréable et cohérent. En \autoref{sub:transfo}, nous obtenons une image en projection equirectangulaire qui représente l'ensemble du champ de vision de la caméra, c'est à dire une sphère. Pour afficher une reconstruction réaliste de ce point de vue, il est nécessaire de reconstituer cette sphère, et de laisser l'utilisateur naviguer à l'intérieur comme s'il tournait la tête afin d'observer une partie du panorama.
+			\par
+			Pour ce faire, nous avons utilisé la technique de l'\emph{UV Mapping}, qui consiste à faire correspondre les sommets d'un polyèdre à des coordonnées dans une image. L'image est alors \og plaquée \fg{} sur le solide. Cette opération revient à effectuer l'inverse de la dernière projection vue en \autoref{sub:transfo}: equirectangulaire vers l'espace réel de l'objectif. Les figures \ref{fig:def0} à \ref{fig:def3} permettent de se représenter instinctivement la manière dont est effectuée cette transformation.
 			
-			\begin{minipage}{.5\textwidth}
+			\begin{figure}[H]
 				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def2.png}
-				\captionof{figure}{Déformation}
-				\label{fig:def2}
-			\end{minipage}%
-			\begin{minipage}{.5\textwidth}
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def0.png}
+					\captionof{figure}{Image equirectangulaire}
+					\label{fig:def0}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def1.png}
+					\captionof{figure}{Scène tridimensionnelle}
+					\label{fig:def1}
+				\end{minipage}
+				
+			\end{figure}
+			\begin{figure}[H]
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def2.png}
+					\captionof{figure}{Vue de l'esprit \og déformation du plan \fg{}}
+					\label{fig:def2}
+				\end{minipage}%
+				\begin{minipage}{.5\textwidth}
+					\centering
+					\includegraphics[width=0.95\linewidth]{figures/def3.png}
+					\captionof{figure}{Sphere mapping}
+					\label{fig:def3}
+				\end{minipage}
+			\end{figure}
+			
+			On \og plaque \fg{} alors la vidéo sphérique sur une sphère dans une scène tridimentionelle, puis on place le point de vue de l'utilisateur au centre de cette sphère. En contrôlant l'orientation du point de vue, l'utilisateur est alors capable de visualiser l'ensemble de la vidéo comme s'il se trouvait à la place de la caméra.
+			\begin{figure}[H]
+			{
 				\centering
-				\includegraphics[width=0.95\linewidth]{figures/def3.png}
-				\captionof{figure}{\emph{Sphere mapping}}
-				\label{fig:def3}
-			\end{minipage}
-		\end{figure}
-		\info[inline]{WIP}
+				\includegraphics[width=.8\textwidth]{figures/cathedrale_eq.jpg}
+				\caption{Photo sphérique de la cathédrale de bourges}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/cathedral_ihm.png}
+				\caption{Vue dans l'\gls{ihm}}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			
+			\par
+			Dans les disciplines de détection et de classification, la présentation des résultats à un utilisateur se fait communément en encadrant les objets détectés avec des couleurs relatives à leurs classes (voir \autoref{fig:pred_f}) sur l'image d'origine. Cette methode simple induit dans notre cas une déformation des annotations lors de la visualisation du flux vidéo et réduit significativement l'expérience utilisateur\footnote{Une fois projetées sur une sphère, les annotations mettent en valeur la forme de projection et rendent l'image subjectivement "plate", empéchant ainsi toute forme d'immersion de l'utilisateur.} (\autoref{fig:pannot}).
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/pannot.png}
+				\caption{Déformation des annotations}
+				\label{fig:pannot}
+			}
+			\end{figure}
+			Au lieu d'être incrustés directement dans l'image, les résultats sont stockés dans une structure de données comportant:
+			\begin{itemize}[noitemsep]
+				\item Position centrale dans l'image (en coordonnées sphériques)
+				\item Largeur et hauteur dans l'image
+				\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement} (en coordonnées cartésiennes)
+				\item Largeur et hauteur dans l'espace\textsuperscript{\ref{ft_calc}}
+				\item Classe
+				\item Score de détection ($ 0 < score < 1 $)
+			\end{itemize}
+			Il est alors possible d'utiliser ces données pour des traitements ultérieurs, par exemple retrouver ces objets sur la cartographie des lieux.
 		
 		\subsection{Correlation Cartographie-Detection}
+		\label{sub:corr}
 		
-			\lipsum[2]
 			\content[inline]{A faire}
 			
 		\subsection{Contrôle du robot}
@@ -310,7 +328,7 @@
 			\end{center}
 			Pour des raisons de simplification, nous n'avons utilisé que le mode asservi, le deuxième n'étant pas documenté dans la documentation officielle de notre version du robot.
 			Ces commandes sont envoyées par action de l'utilisateur, soit par des touches clavier, soit en actionnant le joystick virtuel présent en \todoref.
-			Les lois de contrôle sont relativement simples en raison de l'éloignement avec le sujet du stage et ne seront pas déteillées ici.
+			Les lois de contrôle sont relativement simples en raison de l'éloignement avec le sujet du stage et ne seront pas détaillées ici.
 			\par
 			En retour d'une commande, le robot envoie
 			\begin{center}
@@ -326,11 +344,6 @@
 				\end{tabular}
 			\end{center}
 			\info[inline]{WIP}
-			
-		\subsection{Modularité de l'IHM}
-		
-			\lipsum[2]
-			\content[inline]{A faire}
 			
 	\section{Pérennisation du projet}
 	

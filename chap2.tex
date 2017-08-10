@@ -43,8 +43,6 @@
 			
 			\input{reqs2}
 			
-			\improvement[inline]{Ajouter du contenu ?}
-
 	\section{Planification et Organisation}
 
 		\subsection{Définition des tâches}
@@ -103,7 +101,8 @@
 			Le classifieur, souvent basé sur des \emph{Machines à Vecteur de Support}\cite{svm}, permet de discriminer des groupes au sein des résultats, et donc de déterminer l'appartenance d'un résultat à une classe. Afin de déterminer la classe résultante d'un objet ($y_{i}$), il effectue des sommes pondérées des composantes de ses vecteurs de caractéristiques, et les compare à des valeurs seuils permettant d'activer ou non une sortie. Un algorithme classifieur est généralement entraînable, c'est à dire qu'en lui fournissant un ensemble de couples (vecteurs de caractéristiques; résultat attendu $\hat{y}_{i}$) il déterminera lui même la loi permettant de les séparer. L'enjeu est de réduire l'écart entre $y$ et $\hat{y}$, cette phase d'entraînement revient donc à minimiser une fonction objectif en modulant les pondérations des sommes ($\theta_{i}$) jusqu'à obtenir une loi de discrimination optimale. Un tel comportement correspond à un apprentissage supervisé, où la réponse correcte est connue, permettant à la machine de s'améliorer. Une fois cette phase achevée, le système est théoriquement apte à classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues.
 
 		\subsection{Apprentissage profond et R-CNN}
-
+		\label{sub:neural}
+		
 			L'apprentissage profond est basé sur l'utilisation de réseaux neuronaux artificiels multicouche. Ces réseaux sont schématiquement inspirés des réseaux neuronaux biologiques tels que nous les connaissons en ceci qu'ils se basent sur la transmission de données entre de nombreux modules, appelés \emph{Neurones Formels}, illustré en \autoref{fig:aneuron}. Ces modules prennent en entrée $x_{i}$ des valeurs issues des résultats de neurones précédents ou bien de l'entrée d'origine du système. Ces entrées sont ensuite sommées avec leur \emph{poid synaptique} $\theta_{i}$ respectif, ainsi qu’un coefficient $\theta_{0}$ appelé biais. Ce résultat pondéré est ensuite transmis à une fonction d’activation non linéaire. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné.
 			\begin{figure}[h]
 			{
@@ -113,10 +112,22 @@
 				\label{fig:aneuron}
 			}
 			\end{figure}
+			Le problème à résoudre est similaire à celui des \gls{svm}, c'est à dire qu'il consiste à trouver la valeur optimale du vecteur $\theta$ de manière à séparer linéairement deux classes.
+			\par
+			Les problèmes traditionnels de classification sont généralement insolubles à l'aide de simples régressions linéaires. On organise alors les neurones formels en successions de couches, où toutes les sorties d'une couche sont reliées à des entrées de la couche suivante (sauf la première, qui accepte la donnée à classifier et la dernière, qui donne le résultat de la classification). Lors de la présence d'erreur, chaque neurone du réseau va ajuster ses poids synaptiques $\theta$ de manière à conduire le cheminement d'informations vers le résultat attendu. C'est cette propagation de l'erreur en profondeur qui a donné son nom à cette technologie, le \emph{Deep Learning}.
+			\par
+			Dans un contexte de classification d'objets dans des images, les réseaux neuronaux emploient des neurones qui effectuent des convolutions matricielles, une des opérations les plus utilisées en traitement de l'image. On appelle ce type de réseau un \emph{Réseau Neuronal Convolutif} (\gls{cnn}). Les poids synaptiques sont alors des images issues de l'apprentissage du réseau, qui constituent un résumé des caractéristiques spatiales d'un objet.
+			\par
+			De nombreux algorithmes existent pour effectuer la tâche de détection d'objet d'intérêt, étape préliminaire à la classification. Comme notre tâche est d'effectuer ces opérations en temps réel sur une vidéo, nous allons nous focaliser sur les plus rapides et précis. À la date de rédaction de ce rapport, les réseaux répondants à ces critères sont:
 			
+			\begin{itemize}[noitemsep]
+				\item Faster R-CNN\cite{fasterrcnn}
+				\item You Only Look Once v2 (YOLO)\cite{yolo}
+				\item Single Shot Detector (SSD)\cite{ssd}
+			\end{itemize}
 			
-			\improvement[inline]{Finir description RCNN}
-			\improvement[inline]{Citer différents frameworks+réseaux + darknet-yolo}
+			\emph{YOLO} et \emph{SSD} rivalisent en terme de vitesse et de précision. L'un et l'autre nétant disponible que sur des frameworks différents, la décision a été portée par la facilité de l'intégrer dans le projet. Nous avons donc choisi \emph{YOLO}, au sein du framework \emph{Darknet}, car il est écrit entièrement en langage C et sa license stipule qu'il appartient au domaine public.
+			
 
 		\subsection{Vidéo sphérique}
 			% de 1 à 36 objectifs
