@@ -33,8 +33,17 @@
 			Il permettent de découpler l'émission de données de leur réception, en utilisant un système de publication/souscription unidirectionnel. La communication ne s'effectue plus par la connaissance des interlocuteurs, mais par l'intérêt porté à une donnée précise.
 			Les n\oe{}uds disposant d'une information la publient sur un \emph{topic} particulier, et ceux qui ont besoin de cette information s'y inscrivent. Ce système, basé sur le protocole \emph{XMLRPC}, permet une abstraction complète de la communication entre machines, ce qui simplifie grandement la conception d'une architecture distribuée sur plusieurs postes informatiques, comme l'est notre projet.
 			\par
+			Le schéma suivant illustre l'architecture du réseau \gls{ros}
 			% Image arch ros avec simplification lisa
 			% explication SIMPLE de chaque noeud que j'utilise
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=1\textwidth]{figures/rosgraph_red.pdf}
+				\caption{Image non traitée capturée en sortie de la caméra}
+				\label{fig:rawcapture}
+			}
+			\end{figure}
 			
 			
 			\change[inline]{Ajouter schéma réseau ros}
@@ -311,18 +320,29 @@
 				\label{fig:pannot}
 			}
 			\end{figure}
+			
 			Au lieu d'être incrustés directement dans l'image, les résultats sont stockés dans une structure de données comportant:
 			\begin{itemize}[noitemsep]
 				\item Position centrale dans l'image (en coordonnées sphériques)
 				\item Largeur et hauteur dans l'image
-				\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement} (en coordonnées cartésiennes)
+				\item Position centrale dans l'espace\footnote{\label{ft_calc} Calculé ultérieurement, voir \autoref{sub:corr} (en coordonnées cartésiennes)
 				\item Largeur et hauteur dans l'espace\textsuperscript{\ref{ft_calc}}
 				\item Classe
 				\item Score de détection ($ 0 < score < 1 $)
 			\end{itemize}
-			\change[inline]{Ajouter même figure et explication de comment j'ai fait}
 			
-			Il est alors possible d'utiliser cette structure d'encapsulation des résultats pour des traitements ultérieurs, par exemple retrouver ces objets sur la cartographie des lieux.
+			L'incrustation est alors effectuée par l'\gls{ihm}, qui les dessine sur des plans tangentiels à la sphère (\autoref{fig:gannot}).
+
+			\begin{figure}[H]
+			{
+				\centering
+				\includegraphics[width=.8\textwidth]{figures/gannot.png}
+				\caption{Résultats affichés dans la scène 3D}
+				\label{fig:gannot}
+			}
+			\end{figure}
+			
+			Il est aussi possible d'utiliser cette structure d'encapsulation des résultats pour des traitements ultérieurs, par exemple retrouver ces objets sur la cartographie des lieux.
 		
 		\subsection{Correlation Cartographie-Detection}
 		\label{sub:corr}
